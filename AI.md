@@ -210,3 +210,5 @@ adaptive_navigation.dart:16
 > 你怎么又开始折腾这个Listenable了， 前面不是来回折腾过了， 这个不行， go router需要的Listenable和mobx里的Listenable完全不是一个东西， 
 
 > 还是一样， 点退出后必须再点其他跳转了路由才会回到登录页，没有自动回到登录页，
+
+> 登录页没有回车键登录，看着加上，

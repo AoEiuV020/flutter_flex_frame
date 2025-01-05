@@ -86,6 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         return null;
                       },
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).nextFocus();
+                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -101,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         return null;
                       },
+                      onFieldSubmitted: (_) => _handleLogin(),
                     ),
                     const SizedBox(height: 32),
                     SizedBox(

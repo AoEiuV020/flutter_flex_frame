@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:flutter/material.dart';
 
 part 'layout_store.g.dart';
 
@@ -7,6 +8,9 @@ class LayoutStore = _LayoutStore with _$LayoutStore;
 abstract class _LayoutStore with Store {
   static const double kMobileBreakpoint = 600;
   static const double kTabletBreakpoint = 1200;
+  static const double kFeedListWidth = 240;
+  static const double kFeedListCollapsedWidth = 72;
+  static const double kArticleListWidth = 320;
 
   @observable
   double windowWidth = 0;
@@ -29,13 +33,15 @@ abstract class _LayoutStore with Store {
 
   @computed
   double get feedListWidth => isMobile
-      ? windowWidth
+      ? 0 // 移动端使用抽屉，不占用主布局宽度
       : isFeedListExpanded
-          ? 240
-          : 72;
+          ? kFeedListWidth
+          : kFeedListCollapsedWidth;
 
   @computed
-  double get articleListWidth => isMobile ? windowWidth : 320;
+  double get articleListWidth => isMobile
+      ? windowWidth // 移动端全宽
+      : kArticleListWidth; // 平板和桌面固定宽度
 
   @action
   void setWindowWidth(double width) => windowWidth = width;

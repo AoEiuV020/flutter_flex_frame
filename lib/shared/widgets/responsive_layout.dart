@@ -18,15 +18,21 @@ class ResponsiveLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        if (layoutStore.isMobile) {
-          return _buildMobileLayout();
-        } else if (layoutStore.isTablet) {
-          return _buildTabletLayout();
-        } else {
-          return _buildDesktopLayout();
-        }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        layoutStore.setWindowWidth(constraints.maxWidth);
+
+        return Observer(
+          builder: (context) {
+            if (layoutStore.isMobile) {
+              return _buildMobileLayout();
+            } else if (layoutStore.isTablet) {
+              return _buildTabletLayout();
+            } else {
+              return _buildDesktopLayout();
+            }
+          },
+        );
       },
     );
   }
@@ -38,50 +44,92 @@ class ResponsiveLayout extends StatelessWidget {
               child: feedList!,
             )
           : null,
-      body: articleContent ?? articleList ?? const SizedBox(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
+      ),
+      body: appStore.selectedArticle != null ? articleContent! : articleList!,
     );
   }
 
   Widget _buildTabletLayout() {
-    return Row(
-      children: [
-        if (feedList != null)
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            width: layoutStore.feedListWidth,
-            child: feedList,
-          ),
-        if (articleList != null)
-          SizedBox(
+    return Scaffold(
+      body: Row(
+        children: [
+          if (!layoutStore.isMobile)
+            NavigationRail(
+              extended: layoutStore.isFeedListExpanded,
+              onDestinationSelected: (_) {},
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.menu),
+                  label: Text(''),
+                ),
+              ],
+              leading: IconButton(
+                icon: Icon(
+                  layoutStore.isFeedListExpanded
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
+                ),
+                onPressed: () {
+                  layoutStore.toggleFeedList();
+                },
+              ),
+              selectedIndex: 0,
+            ),
+          if (!layoutStore.isMobile)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: layoutStore.feedListWidth - 72,
+              child: feedList,
+            ),
+          Container(
             width: layoutStore.articleListWidth,
+            decoration: const BoxDecoration(
+              border: Border.symmetric(
+                vertical: BorderSide(color: Colors.black12),
+              ),
+            ),
             child: articleList,
           ),
-        if (articleContent != null)
-          Expanded(
-            child: articleContent!,
-          ),
-      ],
+          if (appStore.selectedArticle != null)
+            Expanded(
+              child: articleContent!,
+            ),
+        ],
+      ),
     );
   }
 
   Widget _buildDesktopLayout() {
-    return Row(
-      children: [
-        if (feedList != null)
+    return Scaffold(
+      body: Row(
+        children: [
           SizedBox(
             width: layoutStore.feedListWidth,
             child: feedList,
           ),
-        if (articleList != null)
-          SizedBox(
+          Container(
             width: layoutStore.articleListWidth,
+            decoration: const BoxDecoration(
+              border: Border.symmetric(
+                vertical: BorderSide(color: Colors.black12),
+              ),
+            ),
             child: articleList,
           ),
-        if (articleContent != null)
           Expanded(
-            child: articleContent!,
+            child: articleContent ?? const SizedBox(),
           ),
-      ],
+        ],
+      ),
     );
   }
 }

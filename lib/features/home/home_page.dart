@@ -27,6 +27,9 @@ class HomePage extends StatelessWidget {
             selectedFeedId: feedId,
             onFeedSelected: (feed) {
               appStore.selectFeed(feed);
+              if (layoutStore.isMobile) {
+                layoutStore.closeDrawer();
+              }
             },
           ),
           articleList: ArticleList(
@@ -35,20 +38,18 @@ class HomePage extends StatelessWidget {
               appStore.selectArticle(article);
             },
           ),
-          articleContent: articleId != null
-              ? ArticleView(
-                  onToggleRead: () {
-                    if (appStore.selectedArticle != null) {
-                      appStore.selectedArticle!.toggleRead();
-                    }
-                  },
-                  onToggleStarred: () {
-                    if (appStore.selectedArticle != null) {
-                      appStore.selectedArticle!.toggleStarred();
-                    }
-                  },
-                )
-              : null,
+          articleContent: ArticleView(
+            onToggleRead: () {
+              if (appStore.selectedArticle != null) {
+                appStore.selectedArticle!.toggleRead();
+              }
+            },
+            onToggleStarred: () {
+              if (appStore.selectedArticle != null) {
+                appStore.selectedArticle!.toggleStarred();
+              }
+            },
+          ),
         );
       },
     );

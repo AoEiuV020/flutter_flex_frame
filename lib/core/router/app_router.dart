@@ -18,50 +18,18 @@ class AppRouter {
   late final ReactionDisposer _disposer;
   late final GoRouter config;
 
-  CustomTransitionPage<void> _buildPage({
-    required LocalKey key,
-    required Widget child,
-  }) {
-    return CustomTransitionPage(
-      key: key,
-      child: child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return Stack(
-          children: [
-            FadeTransition(
-              opacity: secondaryAnimation.drive(
-                Tween(begin: 1.0, end: 0.0)
-                    .chain(CurveTween(curve: Curves.easeOut)),
-              ),
-              child: const SizedBox.expand(),
-            ),
-            FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: animation.drive(
-                  Tween(
-                    begin: const Offset(0.1, 0),
-                    end: Offset.zero,
-                  ).chain(CurveTween(curve: Curves.easeInOut)),
-                ),
-                child: child,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   AppRouter(this._authStore, this._navigationStore) {
     config = GoRouter(
       initialLocation: '/login',
       routes: [
         GoRoute(
           path: '/login',
-          pageBuilder: (context, state) => _buildPage(
-            key: state.pageKey,
-            child: const LoginPage(),
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: '/detail/:id',
+          builder: (context, state) => DetailPage(
+            id: state.pathParameters['id'] ?? '',
           ),
         ),
         ShellRoute(
@@ -87,33 +55,15 @@ class AppRouter {
           routes: [
             GoRoute(
               path: '/dashboard',
-              pageBuilder: (context, state) => _buildPage(
-                key: state.pageKey,
-                child: const DashboardPage(),
-              ),
+              builder: (context, state) => const DashboardPage(),
             ),
             GoRoute(
               path: '/list',
-              pageBuilder: (context, state) => _buildPage(
-                key: state.pageKey,
-                child: const ListPage(),
-              ),
+              builder: (context, state) => const ListPage(),
             ),
             GoRoute(
               path: '/settings',
-              pageBuilder: (context, state) => _buildPage(
-                key: state.pageKey,
-                child: const SettingsPage(),
-              ),
-            ),
-            GoRoute(
-              path: '/detail/:id',
-              pageBuilder: (context, state) => _buildPage(
-                key: state.pageKey,
-                child: DetailPage(
-                  id: state.pathParameters['id'] ?? '',
-                ),
-              ),
+              builder: (context, state) => const SettingsPage(),
             ),
           ],
         ),

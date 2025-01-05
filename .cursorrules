@@ -1,0 +1,380 @@
+# Flutter RSS Reader Project Rules
+
+You are tasked with creating a responsive RSS reader application that demonstrates adaptive layouts across different screen sizes. The project should follow these specific requirements:
+
+## 1. Technology Stack & Conventions
+- Flutter (latest stable version)
+- State Management: MobX
+  * Store classes must end with 'Store' suffix
+  * Use @observable for state variables
+  * Use @computed for derived values
+  * Use @action for state modifications
+  * Stores must be initialized in di/stores.dart
+
+- Dependency Injection: GetIt
+  * Use getter methods for dependency injection
+  * Example: `AuthStore get authStore => GetIt.I<AuthStore>();`
+  * No constructor injection unless absolutely necessary
+  * Register dependencies in di/dependencies.dart
+  * Use lazy singletons by default
+
+- Routing: go_router
+  * Define routes in core/router/routes.dart
+  * Use GoRoute for all routes
+  * Implement custom transitions
+  * Use path parameters for dynamic routing
+  * Handle deep linking
+
+- Localization: easy_localization
+  * Store translations in assets/translations/
+  * Use tr() extension for all text
+  * Support zh-CN as primary language
+  * Implement fallback to English
+
+## 2. Project Structure
+Follow a feature-first architecture:
+```
+lib/
+  ├── core/
+  │   ├── router/
+  │   │   ├── routes.dart
+  │   │   └── transitions.dart
+  │   ├── di/
+  │   │   ├── dependencies.dart
+  │   │   └── stores.dart
+  │   └── theme/
+  │       ├── app_theme.dart
+  │       └── responsive.dart
+  ├── features/
+  │   ├── splash/
+  │   │   ├── splash_page.dart
+  │   │   └── splash_store.dart
+  │   ├── home/
+  │   │   ├── home_page.dart
+  │   │   ├── home_store.dart
+  │   │   └── widgets/
+  │   │       ├── feed_list.dart
+  │   │       ├── article_list.dart
+  │   │       └── article_view.dart
+  │   ├── settings/
+  │   │   ├── settings_page.dart
+  │   │   └── settings_store.dart
+  │   ├── feed_management/
+  │   │   ├── feed_edit_page.dart
+  │   │   └── feed_edit_store.dart
+  │   └── about/
+  │       └── about_page.dart
+  ├── stores/
+  │   ├── app_store.dart
+  │   ├── layout_store.dart
+  │   └── feed_store.dart
+  ├── models/
+  │   ├── feed.dart
+  │   ├── article.dart
+  │   └── category.dart
+  └── shared/
+      ├── widgets/
+      │   ├── responsive_layout.dart
+      │   ├── adaptive_navigation.dart
+      │   └── article_renderer.dart
+      └── utils/
+          ├── constants.dart
+          ├── date_format.dart
+          └── html_parser.dart
+```
+
+## 3. Mock Data Structure
+Implement RSS reader data structure for testing:
+```dart
+class Feed {
+  final String id;
+  final String title;
+  final String url;
+  final String iconUrl;
+  final String category;
+  final int unreadCount;
+  final DateTime lastUpdated;
+}
+
+class Article {
+  final String id;
+  final String feedId;
+  final String title;
+  final String content;
+  final String author;
+  final DateTime publishDate;
+  final bool isRead;
+  final bool isStarred;
+  final String url;
+}
+
+class Category {
+  final String id;
+  final String name;
+  final List<Feed> feeds;
+  
+  int get totalUnread => feeds.fold(0, (sum, feed) => sum + feed.unreadCount);
+}
+
+// Example Mock Data:
+final List<Category> mockCategories = [
+  Category(
+    id: 'tech',
+    name: '科技',
+    feeds: [
+      Feed(
+        id: 'sspai',
+        title: '少数派',
+        url: 'https://sspai.com/feed',
+        unreadCount: 12,
+        // ...
+      ),
+      Feed(
+        id: 'ifanr',
+        title: '爱范儿',
+        url: 'https://www.ifanr.com/feed',
+        unreadCount: 5,
+        // ...
+      ),
+    ],
+  ),
+  Category(
+    id: 'news',
+    name: '新闻',
+    feeds: [
+      Feed(
+        id: 'readhub',
+        title: 'Readhub',
+        url: 'https://readhub.cn/rss',
+        unreadCount: 8,
+        // ...
+      ),
+    ],
+  ),
+];
+
+final List<Article> mockArticles = [
+  Article(
+    id: '1',
+    feedId: 'sspai',
+    title: '如何打造一个高效的 RSS 工作流',
+    content: '正文内容...',
+    author: '少数派',
+    publishDate: DateTime.now(),
+    isRead: false,
+    isStarred: true,
+    // ...
+  ),
+  // More articles...
+];
+```
+
+## 4. Responsive Layout Implementation
+
+The application must implement a three-level content hierarchy (feed list -> article list -> article content) with distinct layouts for different device widths. This is a critical requirement that defines the core user experience.
+
+1. Layout Breakpoints and Behavior:
+
+   a) Mobile Layout (< 600dp):
+   - Primary Requirement: Each level should occupy the full screen when active
+   - Feed & Article List Navigation:
+     * Implement a collapsible drawer/sidebar containing both feed list and article list
+     * When drawer is open, show categorized feed list (Level 1)
+     * Tapping a feed reveals its article list (Level 2) within the same drawer
+     * Drawer should be dismissible via swipe or tap outside
+   - Content Display:
+     * When an article is selected, drawer automatically closes
+     * Article content (Level 3) takes up the entire screen
+     * Implement back button for navigation between levels
+     * Consider swipe gestures for navigating back
+   - Bottom Navigation:
+     * Optional bottom bar for quick access to key features
+     * Include unread counts and important actions
+
+   b) Tablet Layout (600dp - 1200dp):
+   - Primary Requirement: Show two panels simultaneously
+   - Left Side:
+     * Collapsible feed list (Level 1) as a narrow navigation rail
+     * Width when expanded: 240dp
+     * Can be collapsed to icons-only mode
+     * Should remember its state (expanded/collapsed)
+   - Center Area:
+     * Fixed-width article list (Level 2)
+     * Width: 320dp
+     * Always visible, cannot be collapsed
+     * Scrollable independently
+   - Right Side:
+     * Article content (Level 3) fills remaining space
+     * Should adapt its width as left panel expands/collapses
+   - Transitions:
+     * Smooth animations when collapsing/expanding feed list
+     * Maintain content visibility during transitions
+
+   c) Desktop Layout (> 1200dp):
+   - Primary Requirement: All three levels visible simultaneously
+   - Panel Layout:
+     * Feed List (Level 1): Fixed 240dp width on the left
+     * Article List (Level 2): Fixed 320dp width in the middle
+     * Article Content (Level 3): Fills remaining space on the right
+   - Panel Behavior:
+     * All panels independently scrollable
+     * Optional collapsible behavior for feed list and article list
+     * Maintain minimum widths when resizing
+     * Preserve aspect ratios and readability
+   - Enhanced Features:
+     * Keyboard shortcuts for navigation
+     * Hover states for interactive elements
+     * Support for drag-to-resize panel widths (optional)
+
+2. Layout State Management:
+   - Track current layout mode based on screen width
+   - Maintain expansion states for collapsible panels
+   - Remember user preferences for panel states
+   - Handle orientation changes smoothly
+
+3. Content Synchronization:
+   - Highlight selected items across all visible levels
+   - Maintain selection state during layout changes
+   - Smooth transitions when switching between layouts
+   - Preserve scroll positions when possible
+
+4. Performance Requirements:
+   - Efficient panel resizing without jank
+   - Smooth animations for all transitions
+   - Lazy loading for off-screen content
+   - Minimal rebuilds during layout changes
+
+5. Accessibility Considerations:
+   - Logical focus order across panels
+   - Clear navigation patterns for screen readers
+   - Keyboard accessibility for all actions
+   - Sufficient contrast in all layouts
+
+## 5. Route Configuration & Navigation Requirements
+
+1. Main Content Navigation:
+   - Implement nested navigation to handle the three-level structure
+   - Each level should maintain its own navigation state
+   - Support deep linking to any level
+   - Handle back navigation appropriately for each device width
+
+2. Device-Specific Navigation Behavior:
+   a) Mobile (< 600dp):
+   - Start with feed list view
+   - When feed selected, replace entire screen with article list
+   - When article selected, replace entire screen with article content
+   - Implement back button to navigate between levels
+   - Bottom navigation for quick access to main sections
+   - Swipe gestures for navigation between levels (optional)
+
+   b) Tablet (600dp - 1200dp):
+   - Two-panel layout by default
+   - Feed list collapsible into navigation rail on the left
+   - Article list fixed at 320dp width
+   - Article content fills remaining space
+   - Navigation state should persist when toggling feed list visibility
+   - Support split view for article list and content
+
+   c) Desktop (> 1200dp):
+   - Three-panel layout
+   - All navigation levels visible simultaneously
+   - Panel width ratios should be maintained when resizing
+   - Optional collapsible panels for feed list and article list
+   - Support keyboard shortcuts for navigation
+
+3. Overlay Routes:
+   - Settings, About, and Feed Management pages should overlay the entire app
+   - Use custom transitions appropriate for each device width
+   - Maintain underlying navigation state while overlay is active
+   - Support modal and full-screen presentations based on content type
+
+4. URL Structure:
+   - Base path ('/') shows the default layout for current device width
+   - Feed selection reflected in URL: '/feed/{feedId}'
+   - Article selection reflected in URL: '/feed/{feedId}/article/{articleId}'
+   - Overlay routes should use modal-style paths: '/settings', '/about'
+   - Feed management routes: '/feed/add', '/feed/edit/{id}'
+
+5. Navigation State Management:
+   - Persist selected feed and article across route changes
+   - Handle deep linking to specific articles
+   - Maintain scroll position in lists when navigating
+   - Support browser back/forward navigation
+   - Handle route changes without losing user input
+
+6. Error Handling in Navigation:
+   - Gracefully handle invalid routes
+   - Provide fallback routes for missing content
+   - Show appropriate error messages for navigation failures
+   - Support offline navigation with cached content
+
+7. Performance Considerations:
+   - Lazy load content for non-visible panels
+   - Minimize rebuilds during navigation
+   - Cache route history for faster back navigation
+   - Preload adjacent content for smooth transitions
+
+8. Accessibility:
+   - Support keyboard navigation between all levels
+   - Maintain focus management during navigation
+   - Provide screen reader announcements for route changes
+   - Ensure all navigation actions are keyboard accessible
+
+## 6. Code Style & Best Practices
+1. File Naming:
+   - Use snake_case for file names
+   - Use camelCase for class names
+   - Prefix private variables with underscore
+
+2. Widget Structure:
+   - Extract reusable widgets to shared/widgets
+   - Keep widget files under 300 lines
+   - Use const constructors when possible
+
+3. State Management:
+   - One store per feature
+   - Global state in app_store.dart
+   - Use computed properties for derived state
+   - Minimize observable state
+
+4. Error Handling:
+   - Create custom error classes
+   - Use Result type for operations
+   - Implement error boundaries
+   - Show user-friendly error messages
+
+5. Performance:
+   - Use const widgets
+   - Implement pagination for lists
+   - Lazy load images and heavy content
+   - Cache network responses
+
+## 7. Testing Requirements
+1. Unit Tests:
+   - Test all store logic
+   - Test utility functions
+   - Mock external dependencies
+
+2. Widget Tests:
+   - Test responsive behavior
+   - Test navigation flow
+   - Test state changes
+
+3. Integration Tests:
+   - Test full navigation flow
+   - Test responsive layouts
+   - Test offline behavior
+
+## 8. Documentation
+1. Code Documentation:
+   - Document all public APIs
+   - Add usage examples
+   - Document complex algorithms
+
+2. README:
+   - Setup instructions
+   - Architecture overview
+   - Testing instructions
+   - Deployment guide
+
+Remember to maintain clean architecture principles and follow Flutter best practices throughout the implementation. 

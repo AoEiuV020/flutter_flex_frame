@@ -21,6 +21,12 @@ class FeedListContent extends StatelessWidget {
       builder: (context) {
         return ListView(
           children: [
+            if (layoutStore.isMobile)
+              ListTile(
+                leading: const Icon(Icons.close),
+                title: const Text('关闭'),
+                onTap: () => Navigator.of(context).pop(),
+              ),
             ListTile(
               leading: const Icon(Icons.all_inbox),
               title: const Text('全部'),
@@ -28,6 +34,9 @@ class FeedListContent extends StatelessWidget {
               selected: selectedFeedId == null,
               onTap: () {
                 appStore.selectFeed(null);
+                if (layoutStore.isMobile) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
             ListTile(
@@ -37,6 +46,9 @@ class FeedListContent extends StatelessWidget {
               selected: selectedFeedId == 'starred',
               onTap: () {
                 // TODO: 处理收藏文章
+                if (layoutStore.isMobile) {
+                  Navigator.of(context).pop();
+                }
               },
             ),
             const Divider(),
@@ -55,11 +67,16 @@ class FeedListContent extends StatelessWidget {
                     title: Text(feed.title),
                     trailing: Text(feed.unreadCount.toString()),
                     selected: feed.id == selectedFeedId,
-                    onTap: () => onFeedSelected(feed),
+                    onTap: () {
+                      onFeedSelected(feed);
+                      if (layoutStore.isMobile) {
+                        Navigator.of(context).pop();
+                      }
+                    },
                   );
                 }).toList(),
               );
-            }),
+            }).toList(),
           ],
         );
       },

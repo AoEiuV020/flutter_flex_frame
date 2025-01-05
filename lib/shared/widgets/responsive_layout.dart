@@ -39,11 +39,7 @@ class ResponsiveLayout extends StatelessWidget {
 
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-      drawer: feedList != null
-          ? Drawer(
-              child: feedList!,
-            )
-          : null,
+      drawer: feedList != null ? Drawer(child: feedList!) : null,
       body: appStore.selectedArticle != null ? articleContent! : articleList!,
     );
   }

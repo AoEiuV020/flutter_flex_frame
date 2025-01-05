@@ -23,14 +23,65 @@ class ArticleRenderer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildHeader(context),
+        if (layoutStore.isMobile)
+          _buildMobileHeader(context)
+        else
+          _buildDesktopHeader(context),
         _buildContent(context),
         _buildFooter(context),
       ],
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildMobileHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: kToolbarHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            children: [
+              IconButton(
+                padding: const EdgeInsets.all(8),
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => appStore.selectArticle(null),
+              ),
+              Expanded(
+                child: Text(
+                  article.title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (article.author != null || article.publishDate != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Row(
+              children: [
+                if (article.author != null) ...[
+                  Text(
+                    article.author!,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                Text(
+                  _formatDate(article.publishDate),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(

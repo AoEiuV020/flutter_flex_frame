@@ -177,19 +177,22 @@ The application must implement a three-level content hierarchy (feed list -> art
 
    a) Mobile Layout (< 600dp):
    - Primary Requirement: Each level should occupy the full screen when active
-   - Feed & Article List Navigation:
-     * Implement a collapsible drawer/sidebar containing both feed list and article list
-     * When drawer is open, show categorized feed list (Level 1)
-     * Tapping a feed reveals its article list (Level 2) within the same drawer
-     * Drawer should be dismissible via swipe or tap outside
-   - Content Display:
-     * When an article is selected, drawer automatically closes
-     * Article content (Level 3) takes up the entire screen
-     * Implement back button for navigation between levels
-     * Consider swipe gestures for navigating back
-   - Bottom Navigation:
-     * Optional bottom bar for quick access to key features
-     * Include unread counts and important actions
+   - Feed List (Level 1):
+     * Show in a collapsible drawer with a close button
+     * Display categorized feed list
+     * Auto-close drawer when feed is selected
+   - Article List (Level 2):
+     * Full screen display when feed is selected
+     * Show selected feed title in app bar
+     * Menu button to reopen feed list drawer
+   - Article Content (Level 3):
+     * Full screen display when article is selected
+     * Show article title in app bar
+     * Back button to return to article list
+   - Navigation:
+     * Use drawer for feed list navigation
+     * Use app bar back button for level navigation
+     * Support swipe to dismiss drawer
 
    b) Tablet Layout (600dp - 1200dp):
    - Primary Requirement: Show two panels simultaneously

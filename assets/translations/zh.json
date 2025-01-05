@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "FlexFrame Demo"
+  },
+  "auth": {
+    "username": "用户名",
+    "password": "密码",
+    "login": "登录",
+    "username_required": "请输入用户名",
+    "password_required": "请输入密码"
+  },
+  "navigation": {
+    "dashboard": "仪表盘",
+    "list": "列表",
+    "settings": "设置"
+  },
+  "dashboard": {
+    "total_users": "总用户",
+    "active_users": "活跃用户",
+    "new_users": "新增用户",
+    "online_users": "在线用户",
+    "total_revenue": "总收入",
+    "conversion_rate": "转化率"
+  },
+  "list": {
+    "search": "搜索...",
+    "filter": {
+      "all": "全部",
+      "active": "活跃",
+      "inactive": "非活跃"
+    },
+    "item": {
+      "title": "项目 {number}",
+      "id": "ID: {id}"
+    }
+  },
+  "detail": {
+    "title": "项目详情",
+    "description": "这是一个示例项目的详细信息。包含了项目的基本信息、统计数据和相关文档。",
+    "tabs": {
+      "info": "基本信息",
+      "stats": "统计数据",
+      "docs": "相关文档"
+    },
+    "info": {
+      "description": "描述",
+      "basic_info": "基本信息",
+      "create_time": "创建时间",
+      "update_time": "更新时间",
+      "owner": "负责人",
+      "team": "团队成员"
+    }
+  },
+  "settings": {
+    "theme": {
+      "title": "主题设置",
+      "system": "跟随系统",
+      "light": "浅色",
+      "dark": "深色"
+    },
+    "account": {
+      "title": "账户信息",
+      "not_logged_in": "未登录",
+      "user_type": "普通用户",
+      "logout": "退出登录"
+    },
+    "about": {
+      "title": "关于",
+      "version": "版本",
+      "check_update": "检查更新",
+      "privacy": "隐私政策",
+      "terms": "用户协议"
+    }
+  }
+} 

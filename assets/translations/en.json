@@ -1,0 +1,75 @@
+{
+  "app": {
+    "title": "FlexFrame Demo"
+  },
+  "auth": {
+    "username": "Username",
+    "password": "Password",
+    "login": "Login",
+    "username_required": "Please enter username",
+    "password_required": "Please enter password"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "list": "List",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "total_users": "Total Users",
+    "active_users": "Active Users",
+    "new_users": "New Users",
+    "online_users": "Online Users",
+    "total_revenue": "Total Revenue",
+    "conversion_rate": "Conversion Rate"
+  },
+  "list": {
+    "search": "Search...",
+    "filter": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "item": {
+      "title": "Item {number}",
+      "id": "ID: {id}"
+    }
+  },
+  "detail": {
+    "title": "Item Details",
+    "description": "This is a sample item detail that includes basic information, statistics, and related documents.",
+    "tabs": {
+      "info": "Basic Info",
+      "stats": "Statistics",
+      "docs": "Documents"
+    },
+    "info": {
+      "description": "Description",
+      "basic_info": "Basic Information",
+      "create_time": "Create Time",
+      "update_time": "Update Time",
+      "owner": "Owner",
+      "team": "Team Members"
+    }
+  },
+  "settings": {
+    "theme": {
+      "title": "Theme Settings",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "account": {
+      "title": "Account Info",
+      "not_logged_in": "Not Logged In",
+      "user_type": "Regular User",
+      "logout": "Logout"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "check_update": "Check Update",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
+  }
+} 

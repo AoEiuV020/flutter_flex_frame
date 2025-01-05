@@ -58,6 +58,11 @@
       "light": "浅色",
       "dark": "深色"
     },
+    "language": {
+      "title": "语言设置",
+      "english": "English",
+      "chinese": "中文"
+    },
     "account": {
       "title": "账户信息",
       "not_logged_in": "未登录",

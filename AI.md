@@ -161,3 +161,52 @@ detail_page.dart:79
 
 > 就一个参数就别用什么占位符了， 全部代码检查一下，别犯同样的错误，
 
+> 登录状态保持一下， 登录成功假装收到个token后续使用，
+
+> 报错了， import 'package:shared_preferences.dart' arget of URI doesn't exist: 'package:shared_preferences.dart'.
+
+> 退出登录没有效果， 好像是路由没有变化，状态似乎确实退出了， 
+
+> 我听说go route可以是用refreshListenable自动根据登录状态刷新路由，
+
+> 等一下， 我都使用mobx了，为啥还要ChangeNotifier，只需要Listenable就可以了吧，我听说mobx也可以自动实现这个的，
+
+> 这都什么乱七八糟的， 我意思是AuthStore实现Listenable，mobx会自动实现的吧？
+
+> 啥啊，你怎么又搞了多余的类， 我事先听说直接 class AuthStore = _AuthStore with _$AuthStore implements Listenable; 这样不需要写代码直接生成g.dart就可以，不是吗？
+
+> 你别再来回改了， 想清楚再说， 这种方式到底是否可行， 别嘴上说可以但改来改去又不用，
+
+> 我希望使用了mobx就完全不使用ChangeNotifier provider那一套，行不行， 你不行就直说，不行就别强行使用refreshListenable，
+
+```
+什么鬼，现在切换标签直接崩溃了， 
+════════ Exception caught by widgets library ═══════════════════════════════════
+The following assertion was thrown building AdaptiveNavigation(dirty, dependencies: [MediaQuery]):
+'package:flutter/src/material/navigation_rail.dart': Failed assertion: line 121 pos 16: 'selectedIndex == null || (0 <= selectedIndex && selectedIndex < destinations.length)': is not true.
+
+The relevant error-causing widget was:
+    AdaptiveNavigation AdaptiveNavigation:file:///Users/aoeiuv/git/flutter_flex_frame/lib/features/settings/settings_page.dart:19:17
+
+When the exception was thrown, this was the stack:
+#2      new NavigationRail (package:flutter/src/material/navigation_rail.dart:121:16)
+navigation_rail.dart:121
+#3      AdaptiveNavigation.build (package:flutter_flex_frame/widgets/adaptive_navigation.dart:16:12)
+adaptive_navigation.dart:16
+#
+```
+> 你他妈居然乱删代码， 设置页被你删没了，
+
+> 你还记得被你删除之前的设置页吗？和现在完全不一样， 现在这个太丑了， 啥也没有，国际化还有问题， 
+
+> 你改来改去改了半天，我让你修复的退出登录没跳转路由问题根本就没变啊，还是没跳转，
+
+> 傻不傻啊你， 直接go的话状态那边还没退出，直接又跳转到主页了， 而且让你改来改去不就是为了在router这边监听登录状态跳转页面， 你怎么又改成退出ui这里直接go了， 
+
+> 你直接把代码改回去然后问题就不管了吗？我刚说的现在点退出没有跳转路由啊，你不给我检查一下？
+
+> 还是不行，只点击退出没有任何自动跳转，状态确实变了， 手动点个其他标签就会自动跳到登录页了， 
+
+> 你怎么又开始折腾这个Listenable了， 前面不是来回折腾过了， 这个不行， go router需要的Listenable和mobx里的Listenable完全不是一个东西， 
+
+> 还是一样， 点退出后必须再点其他跳转了路由才会回到登录页，没有自动回到登录页，

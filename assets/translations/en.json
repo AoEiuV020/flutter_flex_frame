@@ -58,6 +58,11 @@
       "light": "Light",
       "dark": "Dark"
     },
+    "language": {
+      "title": "Language Settings",
+      "english": "English",
+      "chinese": "中文"
+    },
     "account": {
       "title": "Account Info",
       "not_logged_in": "Not Logged In",

@@ -1,20 +1,45 @@
 import 'package:flutter/material.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../../stores/auth_store.dart';
-import '../../../stores/theme_store.dart';
+import '../../core/di/service_locator.dart';
+import '../../stores/auth_store.dart';
+import '../../stores/theme_store.dart';
 import '../../widgets/adaptive_navigation.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String _version = '';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _version = packageInfo.version;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final themeStore = GetIt.instance<ThemeStore>();
-    final authStore = GetIt.instance<AuthStore>();
+    final authStore = getIt<AuthStore>();
+    final themeStore = getIt<ThemeStore>();
 
     return Scaffold(
       body: Row(
@@ -24,6 +49,7 @@ class SettingsPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                // 主题设置
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -34,30 +60,41 @@ class SettingsPage extends StatelessWidget {
                           'settings.theme.title'.tr(),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const SizedBox(height: 16),
+                        const Divider(),
                         Observer(
-                          builder: (_) => SegmentedButton<ThemeMode>(
-                            segments: [
-                              ButtonSegment(
+                          builder: (_) => Column(
+                            children: [
+                              RadioListTile<ThemeMode>(
+                                title: Text('settings.theme.system'.tr()),
                                 value: ThemeMode.system,
-                                icon: const Icon(Icons.brightness_auto),
-                                label: Text('settings.theme.system'.tr()),
+                                groupValue: themeStore.themeMode,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    themeStore.setThemeMode(value);
+                                  }
+                                },
                               ),
-                              ButtonSegment(
+                              RadioListTile<ThemeMode>(
+                                title: Text('settings.theme.light'.tr()),
                                 value: ThemeMode.light,
-                                icon: const Icon(Icons.light_mode),
-                                label: Text('settings.theme.light'.tr()),
+                                groupValue: themeStore.themeMode,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    themeStore.setThemeMode(value);
+                                  }
+                                },
                               ),
-                              ButtonSegment(
+                              RadioListTile<ThemeMode>(
+                                title: Text('settings.theme.dark'.tr()),
                                 value: ThemeMode.dark,
-                                icon: const Icon(Icons.dark_mode),
-                                label: Text('settings.theme.dark'.tr()),
+                                groupValue: themeStore.themeMode,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    themeStore.setThemeMode(value);
+                                  }
+                                },
                               ),
                             ],
-                            selected: {themeStore.themeMode},
-                            onSelectionChanged: (Set<ThemeMode> modes) {
-                              themeStore.setThemeMode(modes.first);
-                            },
                           ),
                         ),
                       ],
@@ -65,6 +102,44 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // 语言设置
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'settings.language.title'.tr(),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const Divider(),
+                        RadioListTile<String>(
+                          title: Text('settings.language.english'.tr()),
+                          value: 'en',
+                          groupValue: context.locale.languageCode,
+                          onChanged: (value) {
+                            if (value != null) {
+                              context.setLocale(const Locale('en'));
+                            }
+                          },
+                        ),
+                        RadioListTile<String>(
+                          title: Text('settings.language.chinese'.tr()),
+                          value: 'zh',
+                          groupValue: context.locale.languageCode,
+                          onChanged: (value) {
+                            if (value != null) {
+                              context.setLocale(const Locale('zh'));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // 账户设置
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -75,30 +150,25 @@ class SettingsPage extends StatelessWidget {
                           'settings.account.title'.tr(),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const SizedBox(height: 16),
-                        Observer(
-                          builder: (_) => ListTile(
-                            leading: const CircleAvatar(
-                              child: Icon(Icons.person),
-                            ),
-                            title: Text(authStore.currentUser ??
-                                'settings.account.not_logged_in'.tr()),
-                            subtitle: Text('settings.account.user_type'.tr()),
-                          ),
+                        const Divider(),
+                        ListTile(
+                          title: Text('settings.account.user_type'.tr()),
+                          leading: const Icon(Icons.person_outline),
+                          trailing: const Icon(Icons.lock_outline),
                         ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: () => authStore.logout(),
-                            child: Text('settings.account.logout'.tr()),
-                          ),
+                        ListTile(
+                          title: Text('settings.account.logout'.tr()),
+                          leading: const Icon(Icons.logout),
+                          trailing:
+                              const Icon(Icons.arrow_forward_ios, size: 16),
+                          onTap: () => authStore.logout(),
                         ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
+                // 关于
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
@@ -109,32 +179,46 @@ class SettingsPage extends StatelessWidget {
                           'settings.about.title'.tr(),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const SizedBox(height: 16),
+                        const Divider(),
                         ListTile(
                           title: Text('settings.about.version'.tr()),
-                          trailing: const Text('1.0.0'),
-                          onTap: () {},
+                          leading: const Icon(Icons.info_outline),
+                          trailing: _isLoading
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(_version),
                         ),
-                        const Divider(),
                         ListTile(
                           title: Text('settings.about.check_update'.tr()),
+                          leading: const Icon(Icons.system_update),
                           trailing:
                               const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: () {},
+                          onTap: () {
+                            // TODO: 实现检查更新功能
+                          },
                         ),
-                        const Divider(),
                         ListTile(
                           title: Text('settings.about.privacy'.tr()),
+                          leading: const Icon(Icons.privacy_tip_outlined),
                           trailing:
                               const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: () {},
+                          onTap: () {
+                            // TODO: 打开隐私政策
+                          },
                         ),
-                        const Divider(),
                         ListTile(
                           title: Text('settings.about.terms'.tr()),
+                          leading: const Icon(Icons.description_outlined),
                           trailing:
                               const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: () {},
+                          onTap: () {
+                            // TODO: 打开用户协议
+                          },
                         ),
                       ],
                     ),

@@ -9,35 +9,70 @@ part of 'auth_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AuthStore on _AuthStore, Store {
-  late final _$isLoggedInAtom =
-      Atom(name: '_AuthStore.isLoggedIn', context: context);
+  Computed<bool>? _$isLoggedInComputed;
 
   @override
-  bool get isLoggedIn {
-    _$isLoggedInAtom.reportRead();
-    return super.isLoggedIn;
+  bool get isLoggedIn => (_$isLoggedInComputed ??=
+          Computed<bool>(() => super.isLoggedIn, name: '_AuthStore.isLoggedIn'))
+      .value;
+  Computed<String?>? _$tokenComputed;
+
+  @override
+  String? get token => (_$tokenComputed ??=
+          Computed<String?>(() => super.token, name: '_AuthStore.token'))
+      .value;
+  Computed<String?>? _$currentUserComputed;
+
+  @override
+  String? get currentUser =>
+      (_$currentUserComputed ??= Computed<String?>(() => super.currentUser,
+              name: '_AuthStore.currentUser'))
+          .value;
+
+  late final _$_isLoggedInAtom =
+      Atom(name: '_AuthStore._isLoggedIn', context: context);
+
+  @override
+  bool get _isLoggedIn {
+    _$_isLoggedInAtom.reportRead();
+    return super._isLoggedIn;
   }
 
   @override
-  set isLoggedIn(bool value) {
-    _$isLoggedInAtom.reportWrite(value, super.isLoggedIn, () {
-      super.isLoggedIn = value;
+  set _isLoggedIn(bool value) {
+    _$_isLoggedInAtom.reportWrite(value, super._isLoggedIn, () {
+      super._isLoggedIn = value;
     });
   }
 
-  late final _$currentUserAtom =
-      Atom(name: '_AuthStore.currentUser', context: context);
+  late final _$_tokenAtom = Atom(name: '_AuthStore._token', context: context);
 
   @override
-  String? get currentUser {
-    _$currentUserAtom.reportRead();
-    return super.currentUser;
+  String? get _token {
+    _$_tokenAtom.reportRead();
+    return super._token;
   }
 
   @override
-  set currentUser(String? value) {
-    _$currentUserAtom.reportWrite(value, super.currentUser, () {
-      super.currentUser = value;
+  set _token(String? value) {
+    _$_tokenAtom.reportWrite(value, super._token, () {
+      super._token = value;
+    });
+  }
+
+  late final _$_currentUserAtom =
+      Atom(name: '_AuthStore._currentUser', context: context);
+
+  @override
+  String? get _currentUser {
+    _$_currentUserAtom.reportRead();
+    return super._currentUser;
+  }
+
+  @override
+  set _currentUser(String? value) {
+    _$_currentUserAtom.reportWrite(value, super._currentUser, () {
+      super._currentUser = value;
     });
   }
 
@@ -75,9 +110,10 @@ mixin _$AuthStore on _AuthStore, Store {
   @override
   String toString() {
     return '''
+error: ${error},
 isLoggedIn: ${isLoggedIn},
-currentUser: ${currentUser},
-error: ${error}
+token: ${token},
+currentUser: ${currentUser}
     ''';
   }
 }

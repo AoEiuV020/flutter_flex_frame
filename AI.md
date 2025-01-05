@@ -157,3 +157,7 @@ object_patch.dart:38
 #1      _DetailPageState.build (package:flutter_flex_frame/features/detail/detail_page.dart:79:50)
 detail_page.dart:79
 ```
+> 点击可以了， 但显示还是不对， 会显示{number}{id}
+
+> 就一个参数就别用什么占位符了， 全部代码检查一下，别犯同样的错误，
+

@@ -29,18 +29,15 @@ class _ListPageState extends State<ListPage> {
 
   List<Map<String, String>> get _filteredData {
     return _mockData.where((item) {
-      final title = 'list.item.title'.tr(args: [item['number']!]);
-      final matchesSearch =
-          title.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesSearch = 'list.item.title'
+          .tr(args: [item['number']!])
+          .toLowerCase()
+          .contains(_searchQuery.toLowerCase());
       final matchesFilter = _selectedFilter == 'all' ||
           (_selectedFilter == 'active' && item['status'] == 'active') ||
           (_selectedFilter == 'inactive' && item['status'] == 'inactive');
       return matchesSearch && matchesFilter;
     }).toList();
-  }
-
-  String _getStatusText(String status) {
-    return 'list.filter.$status'.tr();
   }
 
   @override
@@ -110,12 +107,10 @@ class _ListPageState extends State<ListPage> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          title: Text(
-                              'list.item.title'.tr(args: [item['number']!])),
-                          subtitle:
-                              Text('list.item.id'.tr(args: [item['id']!])),
+                          title: Text('项目 ${item['number']}'),
+                          subtitle: Text('ID: ${item['id']}'),
                           trailing: Chip(
-                            label: Text(_getStatusText(item['status']!)),
+                            label: Text('list.filter.${item['status']}'.tr()),
                             backgroundColor: item['status'] == 'active'
                                 ? Colors.green.withOpacity(0.1)
                                 : Colors.grey.withOpacity(0.1),

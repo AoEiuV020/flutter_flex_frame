@@ -73,7 +73,7 @@ class _DetailPageState extends State<DetailPage>
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                             Text(
-                              'list.item.id'.tr(args: [widget.id]),
+                              'ID: ${widget.id}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],

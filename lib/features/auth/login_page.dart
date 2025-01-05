@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../stores/auth_store.dart';
 
@@ -30,10 +31,20 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
-        await _authStore.login(
+        final success = await _authStore.login(
           _usernameController.text,
           _passwordController.text,
         );
+        if (success && mounted) {
+          context.go('/dashboard');
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_authStore.error ?? '登录失败'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       } finally {
         if (mounted) setState(() => _isLoading = false);
       }
@@ -106,6 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                               )
                             : Text('auth.login'.tr()),
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '演示账号：\nadmin / admin123\ndemo / demo123',
+                      style: Theme.of(context).textTheme.bodySmall,
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

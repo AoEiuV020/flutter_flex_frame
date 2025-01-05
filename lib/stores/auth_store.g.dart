@@ -41,11 +41,26 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$errorAtom = Atom(name: '_AuthStore.error', context: context);
+
+  @override
+  String? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   late final _$loginAsyncAction =
       AsyncAction('_AuthStore.login', context: context);
 
   @override
-  Future<void> login(String username, String password) {
+  Future<bool> login(String username, String password) {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
@@ -61,7 +76,8 @@ mixin _$AuthStore on _AuthStore, Store {
   String toString() {
     return '''
 isLoggedIn: ${isLoggedIn},
-currentUser: ${currentUser}
+currentUser: ${currentUser},
+error: ${error}
     ''';
   }
 }

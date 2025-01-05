@@ -1,5 +1,4 @@
 import 'package:mobx/mobx.dart';
-import 'package:flutter/material.dart';
 
 part 'layout_store.g.dart';
 
@@ -9,17 +8,16 @@ abstract class _LayoutStore with Store {
   static const double kMobileBreakpoint = 600;
   static const double kTabletBreakpoint = 1200;
   static const double kFeedListWidth = 240;
-  static const double kFeedListCollapsedWidth = 72;
   static const double kArticleListWidth = 320;
 
   @observable
   double windowWidth = 0;
 
   @observable
-  bool isDrawerOpen = false;
+  bool isFeedListExpanded = true;
 
   @observable
-  bool isFeedListExpanded = true;
+  bool isDrawerOpen = false;
 
   @computed
   bool get isMobile => windowWidth < kMobileBreakpoint;
@@ -32,26 +30,34 @@ abstract class _LayoutStore with Store {
   bool get isDesktop => windowWidth >= kTabletBreakpoint;
 
   @computed
-  double get feedListWidth => isMobile
-      ? 0 // 移动端使用抽屉，不占用主布局宽度
-      : isFeedListExpanded
-          ? kFeedListWidth
-          : kFeedListCollapsedWidth;
+  double get feedListWidth => kFeedListWidth;
 
   @computed
-  double get articleListWidth => isMobile
-      ? windowWidth // 移动端全宽
-      : kArticleListWidth; // 平板和桌面固定宽度
+  double get articleListWidth => kArticleListWidth;
 
   @action
-  void setWindowWidth(double width) => windowWidth = width;
+  void setWindowWidth(double width) {
+    windowWidth = width;
+    // 根据窗口宽度自动调整展开状态
+    if (isDesktop) {
+      isFeedListExpanded = true;
+    } else if (isTablet) {
+      isFeedListExpanded = false;
+    }
+  }
 
   @action
-  void toggleDrawer() => isDrawerOpen = !isDrawerOpen;
+  void toggleFeedList() {
+    isFeedListExpanded = !isFeedListExpanded;
+  }
 
   @action
-  void toggleFeedList() => isFeedListExpanded = !isFeedListExpanded;
+  void toggleDrawer() {
+    isDrawerOpen = !isDrawerOpen;
+  }
 
   @action
-  void closeDrawer() => isDrawerOpen = false;
+  void closeDrawer() {
+    isDrawerOpen = false;
+  }
 }

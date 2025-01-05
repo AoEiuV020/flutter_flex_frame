@@ -25,11 +25,11 @@ class ResponsiveLayout extends StatelessWidget {
         return Observer(
           builder: (context) {
             if (layoutStore.isMobile) {
-              return _buildMobileLayout();
+              return _buildMobileLayout(context);
             } else if (layoutStore.isTablet) {
-              return _buildTabletLayout();
+              return _buildTabletLayout(context);
             } else {
-              return _buildDesktopLayout();
+              return _buildDesktopLayout(context);
             }
           },
         );
@@ -37,90 +37,84 @@ class ResponsiveLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileLayout() {
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
       drawer: feedList != null
           ? Drawer(
               child: feedList!,
             )
           : null,
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          ),
-        ),
-      ),
       body: appStore.selectedArticle != null ? articleContent! : articleList!,
     );
   }
 
-  Widget _buildTabletLayout() {
+  Widget _buildTabletLayout(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          if (!layoutStore.isMobile)
-            NavigationRail(
-              extended: layoutStore.isFeedListExpanded,
-              onDestinationSelected: (_) {},
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.menu),
-                  label: Text(''),
+          if (layoutStore.isFeedListExpanded)
+            Container(
+              width: layoutStore.feedListWidth,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                  ),
                 ),
-              ],
-              leading: IconButton(
-                icon: Icon(
-                  layoutStore.isFeedListExpanded
-                      ? Icons.chevron_left
-                      : Icons.chevron_right,
-                ),
-                onPressed: () {
-                  layoutStore.toggleFeedList();
-                },
               ),
-              selectedIndex: 0,
-            ),
-          if (!layoutStore.isMobile)
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: layoutStore.feedListWidth - 72,
               child: feedList,
             ),
           Container(
             width: layoutStore.articleListWidth,
-            decoration: const BoxDecoration(
-              border: Border.symmetric(
-                vertical: BorderSide(color: Colors.black12),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                ),
               ),
             ),
             child: articleList,
           ),
           if (appStore.selectedArticle != null)
             Expanded(
-              child: articleContent!,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                    ),
+                  ),
+                ),
+                child: articleContent!,
+              ),
             ),
         ],
       ),
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          SizedBox(
+          Container(
             width: layoutStore.feedListWidth,
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                ),
+              ),
+            ),
             child: feedList,
           ),
           Container(
             width: layoutStore.articleListWidth,
-            decoration: const BoxDecoration(
-              border: Border.symmetric(
-                vertical: BorderSide(color: Colors.black12),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                ),
               ),
             ),
             child: articleList,

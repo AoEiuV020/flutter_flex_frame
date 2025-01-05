@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-
 import '../../../core/di/dependencies.dart';
 import '../../../models/article.dart';
+import 'article_list_content.dart';
 
 class ArticleList extends StatelessWidget {
   final String? selectedArticleId;
@@ -18,86 +16,45 @@ class ArticleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        final articles = appStore.selectedFeed?.articles ?? [];
+    // 桌面端不显示标题栏
+    if (layoutStore.isDesktop) {
+      return ArticleListContent(
+        selectedArticleId: selectedArticleId,
+        onArticleSelected: onArticleSelected,
+      );
+    }
 
-        return CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(appStore.selectedFeed?.title ?? 'feed.all'.tr()),
-              centerTitle: true,
-              floating: true,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.sort),
-                  onPressed: () {
-                    // TODO: 实现排序功能
-                  },
-                ),
-              ],
+    // 移动端和平板端显示标题栏
+    return Column(
+      children: [
+        AppBar(
+          title: Text(appStore.selectedFeed?.title ?? '全部'),
+          leading: layoutStore.isTablet
+              ? IconButton(
+                  icon: Icon(
+                    layoutStore.isFeedListExpanded
+                        ? Icons.chevron_left
+                        : Icons.chevron_right,
+                  ),
+                  onPressed: layoutStore.toggleFeedList,
+                )
+              : null,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.sort),
+              onPressed: () {
+                // TODO: 实现排序功能
+              },
             ),
-            if (articles.isEmpty)
-              SliverFillRemaining(
-                child: Center(
-                  child: Text('common.no_data'.tr()),
-                ),
-              )
-            else
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final article = articles[index];
-                    return ListTile(
-                      title: Text(
-                        article.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Row(
-                        children: [
-                          if (article.author != null) ...[
-                            Text(article.author!),
-                            const SizedBox(width: 8),
-                          ],
-                          Text(_formatDate(article.publishDate)),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (article.isStarred)
-                            const Icon(
-                              Icons.star,
-                              size: 16,
-                              color: Colors.amber,
-                            ),
-                          if (!article.isRead)
-                            Container(
-                              width: 8,
-                              height: 8,
-                              margin: const EdgeInsets.only(left: 8),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                        ],
-                      ),
-                      selected: article.id == selectedArticleId,
-                      onTap: () => onArticleSelected(article),
-                    );
-                  },
-                  childCount: articles.length,
-                ),
-              ),
           ],
-        );
-      },
+        ),
+        Expanded(
+          child: ArticleListContent(
+            selectedArticleId: selectedArticleId,
+            onArticleSelected: onArticleSelected,
+          ),
+        ),
+      ],
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 }

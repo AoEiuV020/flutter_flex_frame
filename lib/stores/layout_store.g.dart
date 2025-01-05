@@ -58,22 +58,6 @@ mixin _$LayoutStore on _LayoutStore, Store {
     });
   }
 
-  late final _$isDrawerOpenAtom =
-      Atom(name: '_LayoutStore.isDrawerOpen', context: context);
-
-  @override
-  bool get isDrawerOpen {
-    _$isDrawerOpenAtom.reportRead();
-    return super.isDrawerOpen;
-  }
-
-  @override
-  set isDrawerOpen(bool value) {
-    _$isDrawerOpenAtom.reportWrite(value, super.isDrawerOpen, () {
-      super.isDrawerOpen = value;
-    });
-  }
-
   late final _$isFeedListExpandedAtom =
       Atom(name: '_LayoutStore.isFeedListExpanded', context: context);
 
@@ -87,6 +71,22 @@ mixin _$LayoutStore on _LayoutStore, Store {
   set isFeedListExpanded(bool value) {
     _$isFeedListExpandedAtom.reportWrite(value, super.isFeedListExpanded, () {
       super.isFeedListExpanded = value;
+    });
+  }
+
+  late final _$isDrawerOpenAtom =
+      Atom(name: '_LayoutStore.isDrawerOpen', context: context);
+
+  @override
+  bool get isDrawerOpen {
+    _$isDrawerOpenAtom.reportRead();
+    return super.isDrawerOpen;
+  }
+
+  @override
+  set isDrawerOpen(bool value) {
+    _$isDrawerOpenAtom.reportWrite(value, super.isDrawerOpen, () {
+      super.isDrawerOpen = value;
     });
   }
 
@@ -105,22 +105,22 @@ mixin _$LayoutStore on _LayoutStore, Store {
   }
 
   @override
-  void toggleDrawer() {
+  void toggleFeedList() {
     final _$actionInfo = _$_LayoutStoreActionController.startAction(
-        name: '_LayoutStore.toggleDrawer');
+        name: '_LayoutStore.toggleFeedList');
     try {
-      return super.toggleDrawer();
+      return super.toggleFeedList();
     } finally {
       _$_LayoutStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void toggleFeedList() {
+  void toggleDrawer() {
     final _$actionInfo = _$_LayoutStoreActionController.startAction(
-        name: '_LayoutStore.toggleFeedList');
+        name: '_LayoutStore.toggleDrawer');
     try {
-      return super.toggleFeedList();
+      return super.toggleDrawer();
     } finally {
       _$_LayoutStoreActionController.endAction(_$actionInfo);
     }
@@ -141,8 +141,8 @@ mixin _$LayoutStore on _LayoutStore, Store {
   String toString() {
     return '''
 windowWidth: ${windowWidth},
-isDrawerOpen: ${isDrawerOpen},
 isFeedListExpanded: ${isFeedListExpanded},
+isDrawerOpen: ${isDrawerOpen},
 isMobile: ${isMobile},
 isTablet: ${isTablet},
 isDesktop: ${isDesktop},

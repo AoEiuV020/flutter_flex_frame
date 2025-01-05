@@ -28,5 +28,14 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>Flutter Flex Frame</string>
 </dict>
 </plist>

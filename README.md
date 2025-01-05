@@ -209,10 +209,9 @@ Additional Features 额外功能:
 This project serves as a template for Flutter applications requiring adaptive layouts and robust state management.
 本项目作为需要自适应布局和强大状态管理的Flutter应用模板。
 ```
-```
-国际化改用easy_localization，看看该改什么就改，包括项目整体结构， 
+> 国际化改用easy_localization，看看该改什么就改，包括项目整体结构，
 dev依赖的melos保留一下，
-```
-```
-更新README.md，末尾的代码块是和AI的对话保留，其他重写，用中文，你看着来，
-```
+
+> 更新README.md，末尾的代码块是和AI的对话保留，其他重写，用中文，你看着来，
+
+> google fonts需要下载， 有些平台好像需要手动声明网络权限，你给我检查一下各平台代码， 帮我都加上网络权限，

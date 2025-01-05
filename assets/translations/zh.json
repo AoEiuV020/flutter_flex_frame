@@ -29,9 +29,11 @@
       "active": "活跃",
       "inactive": "非活跃"
     },
-    "item": {
-      "title": "项目 {number}",
-      "id": "ID: {id}"
+    "item_title": "项目 {}",
+    "item_id": "编号: {}",
+    "status": {
+      "active": "活跃",
+      "inactive": "非活跃"
     }
   },
   "detail": {

@@ -29,9 +29,11 @@
       "active": "Active",
       "inactive": "Inactive"
     },
-    "item": {
-      "title": "Item {number}",
-      "id": "ID: {id}"
+    "item_title": "Item {}",
+    "item_id": "ID: {}",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
     }
   },
   "detail": {

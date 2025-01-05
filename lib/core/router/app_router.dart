@@ -10,6 +10,7 @@ import '../../features/list/list_page.dart';
 import '../../features/settings/settings_page.dart';
 import '../../stores/auth_store.dart';
 import '../../stores/navigation_store.dart';
+import '../../widgets/adaptive_navigation.dart';
 
 class AppRouter {
   final AuthStore _authStore;
@@ -17,37 +18,109 @@ class AppRouter {
   late final ReactionDisposer _disposer;
   late final GoRouter config;
 
+  CustomTransitionPage<void> _buildPage({
+    required LocalKey key,
+    required Widget child,
+  }) {
+    return CustomTransitionPage(
+      key: key,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return Stack(
+          children: [
+            FadeTransition(
+              opacity: secondaryAnimation.drive(
+                Tween(begin: 1.0, end: 0.0)
+                    .chain(CurveTween(curve: Curves.easeOut)),
+              ),
+              child: const SizedBox.expand(),
+            ),
+            FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: animation.drive(
+                  Tween(
+                    begin: const Offset(0.1, 0),
+                    end: Offset.zero,
+                  ).chain(CurveTween(curve: Curves.easeInOut)),
+                ),
+                child: child,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   AppRouter(this._authStore, this._navigationStore) {
     config = GoRouter(
       initialLocation: '/login',
       routes: [
         GoRoute(
           path: '/login',
-          builder: (context, state) => const LoginPage(),
-        ),
-        GoRoute(
-          path: '/dashboard',
-          builder: (context, state) => const DashboardPage(),
-        ),
-        GoRoute(
-          path: '/list',
-          builder: (context, state) => const ListPage(),
-        ),
-        GoRoute(
-          path: '/detail/:id',
-          builder: (context, state) => DetailPage(
-            id: state.pathParameters['id'] ?? '',
+          pageBuilder: (context, state) => _buildPage(
+            key: state.pageKey,
+            child: const LoginPage(),
           ),
         ),
-        GoRoute(
-          path: '/settings',
-          builder: (context, state) => const SettingsPage(),
+        ShellRoute(
+          builder: (context, state, child) {
+            return Scaffold(
+              body: Row(
+                children: [
+                  AdaptiveNavigation(
+                    selectedIndex: switch (state.matchedLocation) {
+                      '/dashboard' => 0,
+                      '/list' => 1,
+                      '/settings' => 2,
+                      _ => 0,
+                    },
+                  ),
+                  Expanded(
+                    child: child,
+                  ),
+                ],
+              ),
+            );
+          },
+          routes: [
+            GoRoute(
+              path: '/dashboard',
+              pageBuilder: (context, state) => _buildPage(
+                key: state.pageKey,
+                child: const DashboardPage(),
+              ),
+            ),
+            GoRoute(
+              path: '/list',
+              pageBuilder: (context, state) => _buildPage(
+                key: state.pageKey,
+                child: const ListPage(),
+              ),
+            ),
+            GoRoute(
+              path: '/settings',
+              pageBuilder: (context, state) => _buildPage(
+                key: state.pageKey,
+                child: const SettingsPage(),
+              ),
+            ),
+            GoRoute(
+              path: '/detail/:id',
+              pageBuilder: (context, state) => _buildPage(
+                key: state.pageKey,
+                child: DetailPage(
+                  id: state.pathParameters['id'] ?? '',
+                ),
+              ),
+            ),
+          ],
         ),
       ],
       redirect: _handleRedirect,
     );
 
-    // 使用 reaction 持续监听登录状态变化
     _disposer = reaction(
       (_) => _authStore.isLoggedIn,
       (bool isLoggedIn) {

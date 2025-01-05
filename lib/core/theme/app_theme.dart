@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,13 +32,4 @@ class AppTheme {
     swapColors: false,
     fontFamily: GoogleFonts.notoSans().fontFamily,
   );
-}
-
-class AppThemeService {
-  ThemeMode _themeMode = ThemeMode.system;
-  ThemeMode get themeMode => _themeMode;
-
-  void setThemeMode(ThemeMode mode) {
-    _themeMode = mode;
-  }
 }

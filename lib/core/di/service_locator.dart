@@ -5,7 +5,6 @@ import '../../stores/auth_store.dart';
 import '../../stores/navigation_store.dart';
 import '../../stores/theme_store.dart';
 import '../router/app_router.dart';
-import '../theme/app_theme.dart';
 
 final getIt = GetIt.instance;
 
@@ -19,8 +18,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => NavigationStore());
   getIt.registerLazySingleton(() => ThemeStore());
 
-  // Services
-  getIt.registerLazySingleton(() => AppThemeService());
+  // Router
   getIt.registerLazySingleton(() => AppRouter(
         getIt<AuthStore>(),
         getIt<NavigationStore>(),

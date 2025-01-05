@@ -20,6 +20,11 @@ abstract class _ThemeStore with Store {
 
   @action
   void toggleTheme() {
-    themeMode = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    if (themeMode == ThemeMode.system) {
+      themeMode = ThemeMode.light;
+    } else {
+      themeMode =
+          themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    }
   }
 }

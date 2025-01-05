@@ -17,29 +17,30 @@ class _ListPageState extends State<ListPage> {
   String _searchQuery = '';
   String _selectedFilter = 'all';
 
-  final _mockData = List.generate(
+  final List<Map<String, String>> _mockData = List.generate(
     20,
     (index) => {
       'id': 'ITEM${index + 1}',
-      'title': 'list.item.title'.tr(args: ['${index + 1}']),
-      'status': index % 3 == 0
-          ? 'list.filter.active'.tr()
-          : 'list.filter.inactive'.tr(),
+      'number': '${index + 1}',
+      'status': index % 3 == 0 ? 'active' : 'inactive',
       'date': '2024-01-${(index % 30) + 1}',
     },
   );
 
   List<Map<String, String>> get _filteredData {
     return _mockData.where((item) {
+      final title = 'list.item.title'.tr(args: [item['number']!]);
       final matchesSearch =
-          item['title']!.toLowerCase().contains(_searchQuery.toLowerCase());
+          title.toLowerCase().contains(_searchQuery.toLowerCase());
       final matchesFilter = _selectedFilter == 'all' ||
-          (_selectedFilter == 'active' &&
-              item['status'] == 'list.filter.active'.tr()) ||
-          (_selectedFilter == 'inactive' &&
-              item['status'] == 'list.filter.inactive'.tr());
+          (_selectedFilter == 'active' && item['status'] == 'active') ||
+          (_selectedFilter == 'inactive' && item['status'] == 'inactive');
       return matchesSearch && matchesFilter;
     }).toList();
+  }
+
+  String _getStatusText(String status) {
+    return 'list.filter.$status'.tr();
   }
 
   @override
@@ -109,17 +110,17 @@ class _ListPageState extends State<ListPage> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          title: Text(item['title']!),
+                          title: Text(
+                              'list.item.title'.tr(args: [item['number']!])),
                           subtitle:
                               Text('list.item.id'.tr(args: [item['id']!])),
                           trailing: Chip(
-                            label: Text(item['status']!),
-                            backgroundColor:
-                                item['status'] == 'list.filter.active'.tr()
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.grey.withOpacity(0.1),
+                            label: Text(_getStatusText(item['status']!)),
+                            backgroundColor: item['status'] == 'active'
+                                ? Colors.green.withOpacity(0.1)
+                                : Colors.grey.withOpacity(0.1),
                             labelStyle: TextStyle(
-                              color: item['status'] == 'list.filter.active'.tr()
+                              color: item['status'] == 'active'
                                   ? Colors.green
                                   : Colors.grey,
                             ),

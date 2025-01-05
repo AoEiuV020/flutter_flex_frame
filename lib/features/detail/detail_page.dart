@@ -21,18 +21,11 @@ class _DetailPageState extends State<DetailPage>
   late TabController _tabController;
 
   final Map<String, dynamic> _mockData = {
-    'title': 'detail.title'.tr(),
-    'description': 'detail.description'.tr(),
-    'status': 'list.filter.active'.tr(),
     'createTime': '2024-01-01',
     'updateTime': '2024-01-05',
     'owner': '张三',
     'team': <String>['张三', '李四', '王五'],
-    'statistics': <String, String>{
-      'dashboard.total_users'.tr(): '1,234',
-      'dashboard.active_users'.tr(): '56',
-      'dashboard.new_users'.tr(): '789',
-    },
+    'status': 'active',
     'documents': <Map<String, String>>[
       {'title': '项目计划书', 'type': 'PDF', 'size': '2.5MB'},
       {'title': '需求文档', 'type': 'Word', 'size': '1.8MB'},
@@ -76,7 +69,7 @@ class _DetailPageState extends State<DetailPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _mockData['title']!,
+                              'detail.title'.tr(),
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                             Text(
@@ -87,16 +80,14 @@ class _DetailPageState extends State<DetailPage>
                         ),
                       ),
                       Chip(
-                        label: Text(_mockData['status']!),
-                        backgroundColor:
-                            _mockData['status'] == 'list.filter.active'.tr()
-                                ? Colors.green.withOpacity(0.1)
-                                : Colors.grey.withOpacity(0.1),
+                        label: Text('list.filter.${_mockData['status']}'.tr()),
+                        backgroundColor: _mockData['status'] == 'active'
+                            ? Colors.green.withOpacity(0.1)
+                            : Colors.grey.withOpacity(0.1),
                         labelStyle: TextStyle(
-                          color:
-                              _mockData['status'] == 'list.filter.active'.tr()
-                                  ? Colors.green
-                                  : Colors.grey,
+                          color: _mockData['status'] == 'active'
+                              ? Colors.green
+                              : Colors.grey,
                         ),
                       ),
                     ],
@@ -139,7 +130,7 @@ class _DetailPageState extends State<DetailPage>
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          Text(_mockData['description']!),
+          Text('detail.description'.tr()),
           const SizedBox(height: 24),
           Text(
             'detail.info.basic_info'.tr(),
@@ -169,11 +160,17 @@ class _DetailPageState extends State<DetailPage>
   }
 
   Widget _buildStatsTab() {
+    final stats = [
+      {'key': 'dashboard.total_users', 'value': '1,234'},
+      {'key': 'dashboard.active_users', 'value': '891'},
+      {'key': 'dashboard.new_users', 'value': '+123'},
+    ];
+
     return GridView.count(
       padding: const EdgeInsets.all(16),
       crossAxisCount: 3,
       childAspectRatio: 1.5,
-      children: _mockData['statistics']!.entries.map((entry) {
+      children: stats.map<Widget>((stat) {
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -181,12 +178,12 @@ class _DetailPageState extends State<DetailPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  entry.value,
+                  stat['value']!,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  entry.key,
+                  stat['key']!.tr(),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],

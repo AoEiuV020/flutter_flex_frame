@@ -121,3 +121,39 @@ dev依赖的melos保留一下，
 > 点登录就没然后了，你怎么搞的，登录成功失败都没有，如果需要账号密码， 在readme中体现一下，
 
 > 点登录就没然后了，你怎么搞的，登录成功失败都没有，如果需要账号密码， 在readme中体现一下，
+
+> 列表页信息都没有正确显示， 显示了花括号，点击就崩溃了，
+_TypeError (type 'List<dynamic>' is not a subtype of type 'List<Widget>')
+ 检查修复一下， 
+
+```
+完全没有变化， 你对国际化tr的用法是不是有问题， 
+报错没变， 
+The following _TypeError was thrown building DetailPage(dirty, dependencies: [InheritedCupertinoTheme, _InheritedTheme, _LocalizationsScope-[GlobalKey#5b6da]], state: _DetailPageState#f3a5a(ticker inactive)):
+type 'List<dynamic>' is not a subtype of type 'List<Widget>'
+
+The relevant error-causing widget was:
+    DetailPage DetailPage:file:///Users/aoeiuv/git/flutter_flex_frame/lib/core/router/app_router.dart:49:38
+
+When the exception was thrown, this was the stack:
+#0      _DetailPageState._buildStatsTab (package:flutter_flex_frame/features/detail/detail_page.dart:196:10)
+detail_page.dart:196
+#1      _DetailPageState.build (package:flutter_flex_frame/features/detail/detail_page.dart:118:23)
+detail_page.dart:118
+```
+```
+tr用法完全不对，报错了，你是不是瞎改， 
+The following NoSuchMethodError was thrown building DetailPage(dirty, state: _DetailPageState#17ab5(ticker inactive)):
+Class 'String' has no instance method 'tr'.
+Receiver: "detail.title"
+Tried calling: tr()
+
+The relevant error-causing widget was:
+    DetailPage DetailPage:file:///Users/aoeiuv/git/flutter_flex_frame/lib/core/router/app_router.dart:49:38
+
+When the exception was thrown, this was the stack:
+#0      Object.noSuchMethod (dart:core-patch/object_patch.dart:38:5)
+object_patch.dart:38
+#1      _DetailPageState.build (package:flutter_flex_frame/features/detail/detail_page.dart:79:50)
+detail_page.dart:79
+```

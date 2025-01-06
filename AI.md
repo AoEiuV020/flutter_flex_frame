@@ -136,3 +136,7 @@ Try removing the unused parameter.
 > ArticleRenderer还有报错你就不管了？
 
 > 现在mobx的store都集中在lib/stores，其实我们可以写个build.yaml限制builder扫描范围来加快速度，
+
+> 综合整个项目给我写个readme，强调技术栈和演示假数据，以及重点在主页三种视图处理三级数据， 
+
+> 最前面就应该强调技术栈和演示应用，而不是强调RSS阅读器， 这样让人以为有功能似的，

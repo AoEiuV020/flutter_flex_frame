@@ -116,3 +116,4 @@ Try removing the unused parameter.
 > 第一级里的按钮做个样子， 刷新按钮就控制mobx假装刷新一下， 
 设置按钮就用go router打开设置页，
 
+> 检查所有网络请求， 全部使用假数据，把dio直接去掉，

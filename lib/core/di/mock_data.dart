@@ -11,7 +11,7 @@ final mockCategories = [
         id: 'sspai',
         title: '少数派',
         url: 'https://sspai.com/feed',
-        iconUrl: 'https://cdn.sspai.com/sspai/logo.png',
+        iconUrl: null,
         category: 'tech',
         lastUpdated: DateTime.now(),
       )..setArticles([
@@ -103,7 +103,7 @@ RSS（Really Simple Syndication）是一种消息来源格式规范，用以聚�
         id: 'ifanr',
         title: '爱范儿',
         url: 'https://www.ifanr.com/feed',
-        iconUrl: 'https://cdn.ifanr.com/ifanr/logo.png',
+        iconUrl: null,
         category: 'tech',
         lastUpdated: DateTime.now(),
       )..setArticles([
@@ -185,6 +185,7 @@ AI 大模型的发展方向和潜在影响...
         id: 'readhub',
         title: 'Readhub',
         url: 'https://readhub.cn/rss',
+        iconUrl: null,
         category: 'news',
         lastUpdated: DateTime.now(),
       )..setArticles([
@@ -247,7 +248,7 @@ analysis of current market trends...
         id: '36kr',
         title: '36氪',
         url: 'https://36kr.com/feed',
-        iconUrl: 'https://36kr.com/favicon.ico',
+        iconUrl: null,
         category: 'news',
         lastUpdated: DateTime.now(),
       )..setArticles([

@@ -29,16 +29,12 @@ class ArticleList extends StatelessWidget {
       children: [
         AppBar(
           title: Text(appStore.selectedFeed?.title ?? '全部'),
-          leading: layoutStore.isTablet
-              ? IconButton(
-                  icon: Icon(
-                    layoutStore.isFeedListExpanded
-                        ? Icons.chevron_left
-                        : Icons.chevron_right,
-                  ),
-                  onPressed: layoutStore.toggleFeedList,
-                )
-              : null,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.sort),

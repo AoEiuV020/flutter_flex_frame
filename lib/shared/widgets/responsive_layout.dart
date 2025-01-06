@@ -46,20 +46,9 @@ class ResponsiveLayout extends StatelessWidget {
 
   Widget _buildTabletLayout(BuildContext context) {
     return Scaffold(
+      drawer: feedList != null ? Drawer(child: feedList!) : null,
       body: Row(
         children: [
-          if (layoutStore.isFeedListExpanded)
-            Container(
-              width: layoutStore.feedListWidth,
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                  ),
-                ),
-              ),
-              child: feedList,
-            ),
           Container(
             width: layoutStore.articleListWidth,
             decoration: BoxDecoration(
@@ -84,6 +73,8 @@ class ResponsiveLayout extends StatelessWidget {
                 child: articleContent!,
               ),
             ),
+          if (appStore.selectedArticle == null)
+            Expanded(child: const Center(child: Text('请选择一篇文章'))),
         ],
       ),
     );

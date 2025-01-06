@@ -135,3 +135,4 @@ Try removing the unused parameter.
 
 > ArticleRenderer还有报错你就不管了？
 
+> 现在mobx的store都集中在lib/stores，其实我们可以写个build.yaml限制builder扫描范围来加快速度，

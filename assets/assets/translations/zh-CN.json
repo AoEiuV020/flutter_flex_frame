@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "RSS 阅读器",
+    "settings": "设置",
+    "about": "关于"
+  },
+  "feed": {
+    "all": "全部",
+    "unread": "未读",
+    "starred": "收藏",
+    "categories": "分类",
+    "add": "添加订阅",
+    "edit": "编辑订阅",
+    "delete": "删除订阅",
+    "refresh": "刷新"
+  },
+  "article": {
+    "mark_read": "标记已读",
+    "mark_unread": "标记未读",
+    "star": "收藏",
+    "unstar": "取消收藏",
+    "open_browser": "在浏览器中打开"
+  },
+  "settings": {
+    "theme": "主题",
+    "language": "语言",
+    "dark_mode": "深色模式",
+    "font_size": "字体大小",
+    "clear_cache": "清除缓存",
+    "export": "导出数据",
+    "import": "导入数据"
+  },
+  "common": {
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "save": "保存",
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "no_data": "暂无数据"
+  }
+} 

@@ -62,7 +62,7 @@ class ArticleRenderer extends StatelessWidget {
             ],
           ),
         ),
-        if (article.author != null || article.publishDate != null)
+        if (article.author != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Row(

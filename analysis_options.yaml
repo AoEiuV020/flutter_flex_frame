@@ -5,6 +5,7 @@ analyzer:
     asset_directory_does_not_exist: error
     argument_type_not_assignable: warning
     prefer_relative_imports: error
+    library_private_types_in_public_api: ignore
 linter:
   rules:
     - prefer_relative_imports

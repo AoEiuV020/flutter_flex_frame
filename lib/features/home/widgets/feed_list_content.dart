@@ -34,7 +34,7 @@ class FeedListContent extends StatelessWidget {
               selected: selectedFeedId == null,
               onTap: () {
                 appStore.selectFeed(null);
-                if (layoutStore.isMobile) {
+                if (layoutStore.isMobile || layoutStore.isTablet) {
                   Navigator.of(context).pop();
                 }
               },
@@ -46,7 +46,7 @@ class FeedListContent extends StatelessWidget {
               selected: selectedFeedId == 'starred',
               onTap: () {
                 // TODO: 处理收藏文章
-                if (layoutStore.isMobile) {
+                if (layoutStore.isMobile || layoutStore.isTablet) {
                   Navigator.of(context).pop();
                 }
               },
@@ -69,7 +69,7 @@ class FeedListContent extends StatelessWidget {
                     selected: feed.id == selectedFeedId,
                     onTap: () {
                       onFeedSelected(feed);
-                      if (layoutStore.isMobile) {
+                      if (layoutStore.isMobile || layoutStore.isTablet) {
                         Navigator.of(context).pop();
                       }
                     },

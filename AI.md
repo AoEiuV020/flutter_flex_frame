@@ -117,3 +117,5 @@ Try removing the unused parameter.
 设置按钮就用go router打开设置页，
 
 > 检查所有网络请求， 全部使用假数据，把dio直接去掉，
+
+> 平板视图，订阅视图点击没有自动折叠，这块应该和移动视图一样的， 

@@ -3,12 +3,19 @@ import 'package:mobx/mobx.dart';
 import '../models/article.dart';
 import '../models/category.dart';
 import '../models/feed.dart';
+import 'article_store.dart';
+import 'category_store.dart';
+import 'feed_store.dart';
 
 part 'app_store.g.dart';
 
 class AppStore = _AppStore with _$AppStore;
 
 abstract class _AppStore with Store {
+  final Map<String, ArticleStore> _articleStores = {};
+  final Map<String, FeedStore> _feedStores = {};
+  final Map<String, CategoryStore> _categoryStores = {};
+
   @observable
   ObservableList<Category> categories = ObservableList<Category>();
 
@@ -38,11 +45,32 @@ abstract class _AppStore with Store {
 
   @computed
   List<Article> get starredArticles =>
-      allFeeds.expand((f) => f.articles).where((a) => a.isStarred).toList();
+      allArticles.where((a) => getArticleStore(a).isStarred).toList();
 
   @computed
-  int get totalUnreadCount =>
-      categories.fold(0, (sum, category) => sum + category.totalUnread);
+  int get totalUnreadCount => categories.fold(
+      0, (sum, category) => sum + getCategoryStore(category).totalUnread);
+
+  ArticleStore getArticleStore(Article article) {
+    return _articleStores.putIfAbsent(
+      article.id,
+      () => ArticleStore(article),
+    );
+  }
+
+  FeedStore getFeedStore(Feed feed) {
+    return _feedStores.putIfAbsent(
+      feed.id,
+      () => FeedStore(feed),
+    );
+  }
+
+  CategoryStore getCategoryStore(Category category) {
+    return _categoryStores.putIfAbsent(
+      category.id,
+      () => CategoryStore(category),
+    );
+  }
 
   @action
   void selectCategory(Category? category) => selectedCategory = category;
@@ -60,14 +88,44 @@ abstract class _AppStore with Store {
   void setFontSize(double size) => fontSize = size;
 
   @action
-  void addCategory(Category category) => categories.add(category);
+  void addCategory(Category category) {
+    categories.add(category);
+    getCategoryStore(category); // 确保创建 store
+  }
 
   @action
-  void removeCategory(Category category) => categories.remove(category);
+  void removeCategory(Category category) {
+    categories.remove(category);
+    _categoryStores.remove(category.id);
+
+    // 清理相关的 stores
+    for (var feed in category.feeds) {
+      _feedStores.remove(feed.id);
+      for (var article in feed.articles) {
+        _articleStores.remove(article.id);
+      }
+    }
+  }
 
   @action
   void setCategories(List<Category> newCategories) {
+    // 清理旧的 stores
+    _categoryStores.clear();
+    _feedStores.clear();
+    _articleStores.clear();
+
     categories.clear();
     categories.addAll(newCategories);
+
+    // 初始化新的 stores
+    for (var category in newCategories) {
+      getCategoryStore(category);
+      for (var feed in category.feeds) {
+        getFeedStore(feed);
+        for (var article in feed.articles) {
+          getArticleStore(article);
+        }
+      }
+    }
   }
 }

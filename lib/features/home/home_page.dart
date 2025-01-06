@@ -41,12 +41,16 @@ class HomePage extends StatelessWidget {
           articleContent: ArticleView(
             onToggleRead: () {
               if (appStore.selectedArticle != null) {
-                appStore.selectedArticle!.toggleRead();
+                final articleStore =
+                    appStore.getArticleStore(appStore.selectedArticle!);
+                articleStore.toggleRead();
               }
             },
             onToggleStarred: () {
               if (appStore.selectedArticle != null) {
-                appStore.selectedArticle!.toggleStarred();
+                final articleStore =
+                    appStore.getArticleStore(appStore.selectedArticle!);
+                articleStore.toggleStarred();
               }
             },
           ),

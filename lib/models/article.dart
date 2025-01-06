@@ -1,10 +1,4 @@
-import 'package:mobx/mobx.dart';
-
-part 'article.g.dart';
-
-class Article = _Article with _$Article;
-
-abstract class _Article with Store {
+class Article {
   final String id;
   final String feedId;
   final String title;
@@ -12,33 +6,18 @@ abstract class _Article with Store {
   final String? author;
   final DateTime publishDate;
   final String url;
+  bool isRead;
+  bool isStarred;
 
-  @observable
-  bool isRead = false;
-
-  @observable
-  bool isStarred = false;
-
-  _Article({
+  Article({
     required this.id,
     required this.feedId,
     required this.title,
     required this.content,
-    // ignore: unused_element
     this.author,
     required this.publishDate,
     required this.url,
+    this.isRead = false,
+    this.isStarred = false,
   });
-
-  @action
-  void toggleRead() => isRead = !isRead;
-
-  @action
-  void toggleStarred() => isStarred = !isStarred;
-
-  @action
-  void markRead() => isRead = true;
-
-  @action
-  void markUnread() => isRead = false;
 }

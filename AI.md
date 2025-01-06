@@ -119,3 +119,19 @@ Try removing the unused parameter.
 > 检查所有网络请求， 全部使用假数据，把dio直接去掉，
 
 > 平板视图，订阅视图点击没有自动折叠，这块应该和移动视图一样的， 
+
+> 发现个大问题， 你之前生成的代码居然在models中塞了store，
+这不合理吧，按理说所有store都应该独立出来， models只放数据，
+把这个要求写进rules，然后全面找找该改的都改了， 
+
+> AI不要执行build命令生成代码， 该改的该完了说一声让用户自己去生成代码，把这条写进rules里， 
+
+> 还有报错，lib/features/feed_management/feed_edit_page.dart lib/features/home/home_page.dart
+
+> 啥啊，重构代码不影响功能你不知道吗？改完后假数据全都没了， 
+
+> 你能不能不乱改不必要的代码， 现在移动视图的正文部分整个变了， 之前费劲该好的带返回键的布局直接被你改没了，
+不要改动当前目标无关的代码， 给我把这个规则写进rules，
+
+> ArticleRenderer还有报错你就不管了？
+

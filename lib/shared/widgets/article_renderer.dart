@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/di/dependencies.dart';
 import '../../models/article.dart';
+import '../../stores/article_store.dart';
 
 class ArticleRenderer extends StatelessWidget {
   final Article article;
@@ -20,6 +22,8 @@ class ArticleRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final articleStore = appStore.getArticleStore(article);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,7 +32,7 @@ class ArticleRenderer extends StatelessWidget {
         else
           _buildDesktopHeader(context),
         _buildContent(context),
-        _buildFooter(context),
+        _buildFooter(context, articleStore),
       ],
     );
   }
@@ -134,29 +138,41 @@ class ArticleRenderer extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            icon: Icon(
-              article.isRead ? Icons.visibility : Icons.visibility_outlined,
+  Widget _buildFooter(BuildContext context, ArticleStore articleStore) {
+    return Observer(
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Icon(
+                articleStore.isRead
+                    ? Icons.visibility
+                    : Icons.visibility_outlined,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () {
+                articleStore.toggleRead();
+                onToggleRead?.call();
+              },
             ),
-            onPressed: onToggleRead,
-          ),
-          IconButton(
-            icon: Icon(
-              article.isStarred ? Icons.star : Icons.star_border,
+            IconButton(
+              icon: Icon(
+                articleStore.isStarred ? Icons.star : Icons.star_border,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () {
+                articleStore.toggleStarred();
+                onToggleStarred?.call();
+              },
             ),
-            onPressed: onToggleStarred,
-          ),
-          IconButton(
-            icon: const Icon(Icons.open_in_browser),
-            onPressed: () => launchUrl(Uri.parse(article.url)),
-          ),
-        ],
+            IconButton(
+              icon: const Icon(Icons.open_in_browser),
+              onPressed: () => launchUrl(Uri.parse(article.url)),
+            ),
+          ],
+        ),
       ),
     );
   }

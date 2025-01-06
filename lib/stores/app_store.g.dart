@@ -16,6 +16,20 @@ mixin _$AppStore on _AppStore, Store {
       (_$allFeedsComputed ??= Computed<List<Feed>>(() => super.allFeeds,
               name: '_AppStore.allFeeds'))
           .value;
+  Computed<List<Article>>? _$allArticlesComputed;
+
+  @override
+  List<Article> get allArticles => (_$allArticlesComputed ??=
+          Computed<List<Article>>(() => super.allArticles,
+              name: '_AppStore.allArticles'))
+      .value;
+  Computed<List<Article>>? _$currentArticlesComputed;
+
+  @override
+  List<Article> get currentArticles => (_$currentArticlesComputed ??=
+          Computed<List<Article>>(() => super.currentArticles,
+              name: '_AppStore.currentArticles'))
+      .value;
   Computed<List<Article>>? _$starredArticlesComputed;
 
   @override
@@ -228,6 +242,8 @@ selectedArticle: ${selectedArticle},
 isDarkMode: ${isDarkMode},
 fontSize: ${fontSize},
 allFeeds: ${allFeeds},
+allArticles: ${allArticles},
+currentArticles: ${currentArticles},
 starredArticles: ${starredArticles},
 totalUnreadCount: ${totalUnreadCount}
     ''';

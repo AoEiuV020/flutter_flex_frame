@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article.dart';
+part of 'article_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,8 +8,9 @@ part of 'article.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$Article on _Article, Store {
-  late final _$isReadAtom = Atom(name: '_Article.isRead', context: context);
+mixin _$ArticleStore on _ArticleStore, Store {
+  late final _$isReadAtom =
+      Atom(name: '_ArticleStore.isRead', context: context);
 
   @override
   bool get isRead {
@@ -25,7 +26,7 @@ mixin _$Article on _Article, Store {
   }
 
   late final _$isStarredAtom =
-      Atom(name: '_Article.isStarred', context: context);
+      Atom(name: '_ArticleStore.isStarred', context: context);
 
   @override
   bool get isStarred {
@@ -40,50 +41,50 @@ mixin _$Article on _Article, Store {
     });
   }
 
-  late final _$_ArticleActionController =
-      ActionController(name: '_Article', context: context);
+  late final _$_ArticleStoreActionController =
+      ActionController(name: '_ArticleStore', context: context);
 
   @override
   void toggleRead() {
-    final _$actionInfo =
-        _$_ArticleActionController.startAction(name: '_Article.toggleRead');
+    final _$actionInfo = _$_ArticleStoreActionController.startAction(
+        name: '_ArticleStore.toggleRead');
     try {
       return super.toggleRead();
     } finally {
-      _$_ArticleActionController.endAction(_$actionInfo);
+      _$_ArticleStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void toggleStarred() {
-    final _$actionInfo =
-        _$_ArticleActionController.startAction(name: '_Article.toggleStarred');
+    final _$actionInfo = _$_ArticleStoreActionController.startAction(
+        name: '_ArticleStore.toggleStarred');
     try {
       return super.toggleStarred();
     } finally {
-      _$_ArticleActionController.endAction(_$actionInfo);
+      _$_ArticleStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void markRead() {
-    final _$actionInfo =
-        _$_ArticleActionController.startAction(name: '_Article.markRead');
+    final _$actionInfo = _$_ArticleStoreActionController.startAction(
+        name: '_ArticleStore.markRead');
     try {
       return super.markRead();
     } finally {
-      _$_ArticleActionController.endAction(_$actionInfo);
+      _$_ArticleStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void markUnread() {
-    final _$actionInfo =
-        _$_ArticleActionController.startAction(name: '_Article.markUnread');
+    final _$actionInfo = _$_ArticleStoreActionController.startAction(
+        name: '_ArticleStore.markUnread');
     try {
       return super.markUnread();
     } finally {
-      _$_ArticleActionController.endAction(_$actionInfo);
+      _$_ArticleStoreActionController.endAction(_$actionInfo);
     }
   }
 

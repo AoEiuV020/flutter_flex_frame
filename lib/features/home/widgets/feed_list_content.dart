@@ -76,7 +76,7 @@ class FeedListContent extends StatelessWidget {
                   );
                 }).toList(),
               );
-            }).toList(),
+            }),
           ],
         );
       },

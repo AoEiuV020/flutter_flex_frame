@@ -139,14 +139,15 @@ class _FeedEditPageState extends State<FeedEditPage> {
       final category = appStore.categories.firstWhere(
         (c) => c.id == _selectedCategory,
       );
+      final categoryStore = appStore.getCategoryStore(category);
 
       if (widget.feedId != null) {
         // 更新订阅
-        category.removeFeed(
+        categoryStore.removeFeed(
           category.feeds.firstWhere((f) => f.id == widget.feedId),
         );
       }
-      category.addFeed(feed);
+      categoryStore.addFeed(feed);
 
       Navigator.of(context).pop();
     }

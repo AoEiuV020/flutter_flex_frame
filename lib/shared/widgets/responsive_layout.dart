@@ -74,7 +74,7 @@ class ResponsiveLayout extends StatelessWidget {
               ),
             ),
           if (appStore.selectedArticle == null)
-            Expanded(child: const Center(child: Text('请选择一篇文章'))),
+            const Expanded(child: Center(child: Text('请选择一篇文章'))),
         ],
       ),
     );

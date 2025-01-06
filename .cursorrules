@@ -324,29 +324,47 @@ The application must implement a three-level content hierarchy (feed list -> art
    - Ensure all navigation actions are keyboard accessible
 
 ## 6. Code Style & Best Practices
-1. File Naming:
+1. Code Changes:
+   - Only modify code directly related to the current task
+   - Preserve existing functionality and layouts unless specifically required to change
+   - Never modify unrelated code sections even if they could be "improved"
+   - Keep changes minimal and focused
+   - If unsure whether a change is necessary, ask the user first
+
+2. File Naming:
    - Use snake_case for file names
    - Use camelCase for class names
    - Prefix private variables with underscore
 
-2. Widget Structure:
+3. Widget Structure:
    - Extract reusable widgets to shared/widgets
    - Keep widget files under 300 lines
    - Use const constructors when possible
 
-3. State Management:
+4. State Management:
    - One store per feature
    - Global state in app_store.dart
    - Use computed properties for derived state
    - Minimize observable state
+   - Stores must be completely separated from models
+   - Models should only contain data structures and basic methods
+   - All state management logic must reside in store classes
+   - No store-related annotations (@observable, @computed, etc.) in model classes
 
-4. Error Handling:
+5. Code Generation:
+   - Never run code generation commands directly
+   - Inform users when code generation is needed
+   - Clearly specify which files need generation
+   - Let users run build_runner or other generation tools themselves
+   - Remind users to check generated files after running commands
+
+6. Error Handling:
    - Create custom error classes
    - Use Result type for operations
    - Implement error boundaries
    - Show user-friendly error messages
 
-5. Performance:
+7. Performance:
    - Use const widgets
    - Implement pagination for lists
    - Lazy load images and heavy content

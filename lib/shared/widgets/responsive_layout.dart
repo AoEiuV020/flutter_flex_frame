@@ -107,7 +107,9 @@ class ResponsiveLayout extends StatelessWidget {
             child: articleList,
           ),
           Expanded(
-            child: articleContent ?? const SizedBox(),
+            child: appStore.selectedArticle != null
+                ? articleContent!
+                : const Center(child: Text('请选择一篇文章')),
           ),
         ],
       ),

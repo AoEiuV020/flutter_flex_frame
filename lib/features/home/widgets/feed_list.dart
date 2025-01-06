@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/di/dependencies.dart';
 import '../../../models/feed.dart';
@@ -14,34 +15,56 @@ class FeedList extends StatelessWidget {
     required this.onFeedSelected,
   });
 
+  void _handleRefresh() {
+    // 模拟刷新：重新设置所有分类
+    final categories = appStore.categories.toList();
+    appStore.setCategories([]);
+    Future.delayed(const Duration(milliseconds: 500), () {
+      appStore.setCategories(categories);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 移动端和平板端不显示标题栏，由外层控制
-    if (!layoutStore.isDesktop) {
-      return FeedListContent(
-        selectedFeedId: selectedFeedId,
-        onFeedSelected: onFeedSelected,
-      );
-    }
-
-    // 桌面端显示标题栏
     return Column(
       children: [
-        AppBar(
-          title: const Text('订阅'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                // TODO: 实现刷新功能
-              },
-            ),
-          ],
-        ),
         Expanded(
           child: FeedListContent(
             selectedFeedId: selectedFeedId,
             onFeedSelected: onFeedSelected,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).dividerColor,
+              ),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _handleRefresh,
+                tooltip: '刷新',
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  context.push('/feed/add');
+                },
+                tooltip: '添加订阅',
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  context.push('/settings');
+                },
+                tooltip: '设置',
+              ),
+            ],
           ),
         ),
       ],

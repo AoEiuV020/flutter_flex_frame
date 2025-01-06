@@ -31,6 +31,12 @@ abstract class _AppStore with Store {
   List<Feed> get allFeeds => categories.expand((c) => c.feeds).toList();
 
   @computed
+  List<Article> get allArticles => allFeeds.expand((f) => f.articles).toList();
+
+  @computed
+  List<Article> get currentArticles => selectedFeed?.articles ?? allArticles;
+
+  @computed
   List<Article> get starredArticles =>
       allFeeds.expand((f) => f.articles).where((a) => a.isStarred).toList();
 

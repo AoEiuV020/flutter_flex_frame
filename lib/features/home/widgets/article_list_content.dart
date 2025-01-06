@@ -19,7 +19,7 @@ class ArticleListContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        final articles = appStore.selectedFeed?.articles ?? [];
+        final articles = appStore.currentArticles;
 
         if (articles.isEmpty) {
           return const Center(

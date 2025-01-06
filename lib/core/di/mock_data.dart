@@ -110,7 +110,7 @@ RSS（Really Simple Syndication）是一种消息来源格式规范，用以聚�
           Article(
             id: 'article3',
             feedId: 'ifanr',
-            title: '苹果发布会前瞻',
+            title: '苹果发布会前瞻：iPhone 15 系列有哪些新特性？',
             content: '''
 # 苹果发布会前瞻
 
@@ -140,6 +140,41 @@ RSS（Really Simple Syndication）是一种消息来源格式规范，用以聚�
             url: 'https://www.ifanr.com/12345',
             author: '爱范儿',
           ),
+          Article(
+            id: 'article4',
+            feedId: 'ifanr',
+            title: '一文看懂 AI 大模型的发展历程',
+            content: '''
+# AI 大模型发展历程
+
+从 GPT-1 到 GPT-4，AI 大模型的发展经历了哪些重要阶段？
+
+## 早期探索
+
+- BERT
+- GPT-1
+- GPT-2
+
+## 突破性进展
+
+- GPT-3
+- InstructGPT
+- ChatGPT
+
+## 最新发展
+
+- GPT-4
+- Claude
+- LLaMA
+
+## 未来展望
+
+AI 大模型的发展方向和潜在影响...
+''',
+            publishDate: DateTime.now().subtract(const Duration(hours: 8)),
+            url: 'https://www.ifanr.com/12346',
+            author: '爱范儿科技组',
+          ),
         ]),
     ]),
   Category(
@@ -154,9 +189,9 @@ RSS（Really Simple Syndication）是一种消息来源格式规范，用以聚�
         lastUpdated: DateTime.now(),
       )..setArticles([
           Article(
-            id: 'article4',
+            id: 'article5',
             feedId: 'readhub',
-            title: '今日科技要闻',
+            title: '今日科技要闻汇总',
             content: '''
 # 今日科技要闻
 
@@ -180,6 +215,91 @@ analysis of current market trends...
 ''',
             publishDate: DateTime.now().subtract(const Duration(hours: 1)),
             url: 'https://readhub.cn/12345',
+            author: 'Readhub',
+          ),
+          Article(
+            id: 'article6',
+            feedId: 'readhub',
+            title: '互联网行业一周动态',
+            content: '''
+# 互联网行业周报
+
+## 重要新闻
+
+1. 短视频平台最新政策
+2. 游戏版号发放情况
+3. 电商平台竞争格局
+
+## 行业分析
+
+详细的市场分析和趋势预测...
+
+## 政策解读
+
+相关政策的解读和影响分析...
+''',
+            publishDate: DateTime.now().subtract(const Duration(hours: 3)),
+            url: 'https://readhub.cn/12346',
+            author: 'Readhub 编辑部',
+          ),
+        ]),
+      Feed(
+        id: '36kr',
+        title: '36氪',
+        url: 'https://36kr.com/feed',
+        iconUrl: 'https://36kr.com/favicon.ico',
+        category: 'news',
+        lastUpdated: DateTime.now(),
+      )..setArticles([
+          Article(
+            id: 'article7',
+            feedId: '36kr',
+            title: '创业公司融资周报',
+            content: '''
+# 本周融资概况
+
+## A 轮融资
+
+1. AI 公司 A 完成 1000 万美元融资
+2. B2B 平台 B 获得 2000 万人民币投资
+
+## B 轮融资
+
+1. 企业服务公司 C 完成 5000 万美元融资
+2. 医疗科技公司 D 获得 1 亿人民币投资
+
+## 投资方向分析
+
+本周投资主要集中在 AI、企业服务、医疗科技等领域...
+''',
+            publishDate: DateTime.now().subtract(const Duration(hours: 5)),
+            url: 'https://36kr.com/12345',
+            author: '36氪',
+          ),
+          Article(
+            id: 'article8',
+            feedId: '36kr',
+            title: '2023年创业趋势分析',
+            content: '''
+# 2023创业趋势
+
+## 热门领域
+
+1. 人工智能
+2. 企业服务
+3. 新能源
+
+## 投资环境
+
+市场资金状况和投资偏好分析...
+
+## 创业建议
+
+给创业者的建议和注意事项...
+''',
+            publishDate: DateTime.now().subtract(const Duration(hours: 7)),
+            url: 'https://36kr.com/12346',
+            author: '36氪研究院',
           ),
         ]),
     ]),

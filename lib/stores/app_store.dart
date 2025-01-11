@@ -6,6 +6,8 @@ import '../core/database/database.dart';
 import '../core/di/dependencies.dart';
 import '../repositories/article_repository.dart';
 import '../repositories/feed_repository.dart';
+import '../repositories/implementations/article_repository_impl.dart';
+import '../repositories/implementations/feed_repository_impl.dart';
 import 'article_store.dart';
 
 part 'app_store.g.dart';
@@ -123,6 +125,17 @@ abstract class _AppStore with Store {
     if (selectedFeedId != null) {
       await loadArticles(selectedFeedId!);
     }
+  }
+
+  @action
+  Future<void> initTestData() async {
+    final existingFeeds = await _feedRepository.getAllFeeds();
+    if (existingFeeds.isEmpty) {
+      await (_feedRepository as FeedRepositoryImpl).insertTestData();
+      await (_articleRepository as ArticleRepositoryImpl).insertTestArticles();
+    }
+    await loadFeeds();
+    await loadArticles(null);
   }
 
   @action

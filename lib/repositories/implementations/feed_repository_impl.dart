@@ -47,4 +47,47 @@ class FeedRepositoryImpl implements FeedRepository {
     return (_db.update(_db.feedTable)..where((tbl) => tbl.id.equals(id)))
         .write(FeedTableCompanion(lastUpdated: Value(time)));
   }
+
+  // 添加测试数据
+  Future<void> insertTestData() async {
+    // 科技频道
+    await insertFeed(FeedTableCompanion.insert(
+      id: 'tech_1',
+      title: '少数派',
+      url: 'https://sspai.com/feed',
+      category: '科技',
+      lastUpdated: DateTime.now(),
+      iconUrl: const Value(
+          'https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico'),
+    ));
+
+    await insertFeed(FeedTableCompanion.insert(
+      id: 'tech_2',
+      title: '36氪',
+      url: 'https://36kr.com/feed',
+      category: '科技',
+      lastUpdated: DateTime.now(),
+      iconUrl: const Value('https://36kr.com/favicon.ico'),
+    ));
+
+    // 新闻频道
+    await insertFeed(FeedTableCompanion.insert(
+      id: 'news_1',
+      title: '澎湃新闻',
+      url: 'https://thepaper.cn/rss',
+      category: '新闻',
+      lastUpdated: DateTime.now(),
+      iconUrl: const Value('https://thepaper.cn/favicon.ico'),
+    ));
+
+    // 博客频道
+    await insertFeed(FeedTableCompanion.insert(
+      id: 'blog_1',
+      title: '阮一峰的网络日志',
+      url: 'http://www.ruanyifeng.com/blog/atom.xml',
+      category: '博客',
+      lastUpdated: DateTime.now(),
+      iconUrl: const Value('http://www.ruanyifeng.com/favicon.ico'),
+    ));
+  }
 }

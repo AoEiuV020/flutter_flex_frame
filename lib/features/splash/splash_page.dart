@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/di/dependencies.dart';
+import '../../stores/app_store.dart';
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -18,8 +21,11 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _init() async {
-    // 模拟初始化过程
-    await Future.delayed(const Duration(seconds: 2));
+    final appStore = getIt<AppStore>();
+
+    // 初始化测试数据
+    await appStore.initTestData();
+
     if (mounted) {
       context.go('/home');
     }

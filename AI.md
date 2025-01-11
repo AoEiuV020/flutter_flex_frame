@@ -252,3 +252,12 @@ Did you forget to register it?))
 > 我回滚了一些， 再修一下，
 注意尽量不要删除已有的代码功能， 
 不要修改ui，只处理数据，用analyze处理报错， 
+
+AI不行了， 死活要改ui，bug翻来覆去改不好了， 后面手动指导一下，
+
+> 现在这个“全部”使用的是id 'all' ，这不对，这里应该是null代表全部， 层层调整一下支持通过这个null查询出所有文章，
+
+> FeedListContent.onFeedSelected这里的String还是非空，报错了， 
+
+> HomePage报错了，好像有参数不对， 
+

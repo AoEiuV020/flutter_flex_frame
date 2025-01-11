@@ -51,8 +51,8 @@ class _HomePageState extends State<HomePage> {
         return ResponsiveLayout(
           feedList: FeedList(
             selectedFeedId: widget.feedId,
-            onFeedSelected: (feed) {
-              appStore.selectFeed(feed.id);
+            onFeedSelected: (feedId) {
+              appStore.selectFeed(feedId);
               if (layoutStore.isMobile) {
                 layoutStore.closeDrawer();
               }

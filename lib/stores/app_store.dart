@@ -86,8 +86,10 @@ abstract class _AppStore with Store {
   }
 
   @action
-  Future<void> loadArticles(String feedId) async {
-    final loadedArticles = await _articleRepository.getArticlesByFeed(feedId);
+  Future<void> loadArticles(String? feedId) async {
+    final loadedArticles = feedId == null
+        ? await _articleRepository.getAllArticles()
+        : await _articleRepository.getArticlesByFeed(feedId);
     articles.clear();
     articles.addAll(loadedArticles);
   }
@@ -95,11 +97,7 @@ abstract class _AppStore with Store {
   @action
   void selectFeed(String? feedId) {
     selectedFeedId = feedId;
-    if (feedId != null) {
-      loadArticles(feedId);
-    } else {
-      articles.clear();
-    }
+    loadArticles(feedId);
     selectedArticleId = null;
   }
 

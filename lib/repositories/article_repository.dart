@@ -2,6 +2,7 @@ import '../core/database/database.dart';
 
 abstract class ArticleRepository {
   Future<List<ArticleTableData>> getArticlesByFeed(String feedId);
+  Future<List<ArticleTableData>> getAllArticles();
   Future<ArticleTableData?> getArticleById(String id);
   Future<void> insertArticle(ArticleTableCompanion article);
   Future<void> updateArticle(ArticleTableCompanion article);

@@ -8,7 +8,7 @@ import '../../../stores/layout_store.dart';
 
 class FeedListContent extends StatelessWidget {
   final String? selectedFeedId;
-  final Function(String) onFeedSelected;
+  final Function(String?) onFeedSelected;
 
   const FeedListContent({
     super.key,
@@ -36,7 +36,7 @@ class FeedListContent extends StatelessWidget {
               title: const Text('全部'),
               trailing: Text(appStore.totalUnreadCount.toString()),
               selected: selectedFeedId == null,
-              onTap: () => onFeedSelected('all'),
+              onTap: () => onFeedSelected(null),
             ),
             const Divider(),
             ...appStore.categories.map((category) {

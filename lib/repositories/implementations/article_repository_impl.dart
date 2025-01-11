@@ -64,4 +64,16 @@ class ArticleRepositoryImpl implements ArticleRepository {
           ..where((tbl) => tbl.isStarred.equals(false)))
         .go();
   }
+
+  @override
+  Future<List<ArticleTableData>> getAllArticles() async {
+    return await (_db.select(_db.articleTable)
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.publishDate,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
+  }
 }

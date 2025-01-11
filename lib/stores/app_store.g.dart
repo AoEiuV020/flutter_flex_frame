@@ -183,7 +183,7 @@ mixin _$AppStore on _AppStore, Store {
       AsyncAction('_AppStore.loadArticles', context: context);
 
   @override
-  Future<void> loadArticles(String feedId) {
+  Future<void> loadArticles(String? feedId) {
     return _$loadArticlesAsyncAction.run(() => super.loadArticles(feedId));
   }
 

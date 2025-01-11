@@ -8,7 +8,7 @@ import 'feed_list_content.dart';
 
 class FeedList extends StatelessWidget {
   final String? selectedFeedId;
-  final Function(FeedTableData) onFeedSelected;
+  final Function(String?) onFeedSelected;
 
   AppStore get appStore => getIt<AppStore>();
 
@@ -35,8 +35,12 @@ class FeedList extends StatelessWidget {
           child: FeedListContent(
             selectedFeedId: selectedFeedId,
             onFeedSelected: (id) {
+              if (id == null) {
+                onFeedSelected(null);
+                return;
+              }
               final feed = appStore.feeds.firstWhere((f) => f.id == id);
-              onFeedSelected(feed);
+              onFeedSelected(feed.id);
             },
           ),
         ),

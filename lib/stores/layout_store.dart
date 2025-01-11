@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:mobx/mobx.dart';
 
 part 'layout_store.g.dart';
@@ -9,6 +11,8 @@ abstract class _LayoutStore with Store {
   static const double kTabletBreakpoint = 1200;
   static const double kFeedListWidth = 320;
   static const double kArticleListWidth = 400;
+
+  BuildContext? _drawerContext;
 
   @observable
   bool isDrawerOpen = false;
@@ -37,28 +41,50 @@ abstract class _LayoutStore with Store {
 
   @action
   void setWindowWidth(double width) {
+    final oldWidth = screenWidth;
     screenWidth = width;
-    // 根据窗口宽度自动调整展开状态
-    if (isDesktop) {
-      isFeedListExpanded = true;
-    } else if (isTablet) {
-      isFeedListExpanded = false;
+
+    // 处理视图切换时的状态
+    if (oldWidth > 0) {
+      // 忽略初始化
+      if (isDesktop) {
+        // 切换到桌面视图时，清除抽屉状态
+        isDrawerOpen = false;
+        _drawerContext = null;
+        isFeedListExpanded = true;
+      } else if (isTablet) {
+        isFeedListExpanded = false;
+      }
     }
+  }
+
+  void setDrawerContext(BuildContext context) {
+    _drawerContext = context;
   }
 
   @action
   void openDrawer() {
-    isDrawerOpen = true;
+    if (_drawerContext != null && (isMobile || isTablet)) {
+      Scaffold.of(_drawerContext!).openDrawer();
+      isDrawerOpen = true;
+    }
   }
 
   @action
   void closeDrawer() {
-    isDrawerOpen = false;
+    if (_drawerContext != null && (isMobile || isTablet)) {
+      Scaffold.of(_drawerContext!).closeDrawer();
+      isDrawerOpen = false;
+    }
   }
 
   @action
   void toggleDrawer() {
-    isDrawerOpen = !isDrawerOpen;
+    if (isDrawerOpen) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
   }
 
   @action

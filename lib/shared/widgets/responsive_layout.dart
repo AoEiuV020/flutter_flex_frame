@@ -11,10 +11,10 @@ class ResponsiveLayout extends StatelessWidget {
   final Widget articleList;
   final Widget articleContent;
 
-  LayoutStore get layoutStore => getIt<LayoutStore>();
-  AppStore get appStore => getIt<AppStore>();
+  final LayoutStore layoutStore = getIt<LayoutStore>();
+  final AppStore appStore = getIt<AppStore>();
 
-  const ResponsiveLayout({
+  ResponsiveLayout({
     super.key,
     required this.feedList,
     required this.articleList,
@@ -44,14 +44,24 @@ class ResponsiveLayout extends StatelessWidget {
 
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(child: feedList),
+      drawer: Builder(
+        builder: (context) {
+          layoutStore.setDrawerContext(context);
+          return Drawer(child: feedList);
+        },
+      ),
       body: appStore.selectedArticle != null ? articleContent : articleList,
     );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(child: feedList),
+      drawer: Builder(
+        builder: (context) {
+          layoutStore.setDrawerContext(context);
+          return Drawer(child: feedList);
+        },
+      ),
       body: Row(
         children: [
           Container(

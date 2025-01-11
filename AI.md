@@ -265,3 +265,16 @@ AI不行了， 死活要改ui，bug翻来覆去改不好了， 后面手动指�
 
 > insertTestArticles报错了， 有些你看看报错， 有些字段需要用Value包装， 其他字段没问题， 
 
+> 帮我找一下侧边栏drawer，现在点击订阅后没有自动折叠起来，你帮我找找怎么处理， 
+
+> 不行， 一步一步思考梳理一下，怎么自动折叠，另外尽量不要使用StatefulWidget，mobx+getIt应该可以替代， 
+
+> 有效， 但是这里有移动视图和平板视图都有drawer，可是目前只有移动视图能自动折叠，
+
+> 应该不需要这种层层判断吧，没有更直接一点的办法吗，有drawer就折叠， 
+另外现在有可能报错， Exception has occurred.
+_AssertionError ('package:go_router/src/delegate.dart': Failed assertion: line 159 pos 7: 'currentConfiguration.isNotEmpty': You have popped the last page off of the stack, there are no pages left to show)
+
+> FlutterError (Scaffold.of() called with a context that does not contain a Scaffold.
+
+> 还有问题， 从移动视图调整窗口切换到桌面视图的情况， drawer没有了， 折叠崩溃了， 

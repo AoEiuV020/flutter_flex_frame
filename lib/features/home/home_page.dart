@@ -53,9 +53,7 @@ class _HomePageState extends State<HomePage> {
             selectedFeedId: widget.feedId,
             onFeedSelected: (feedId) {
               appStore.selectFeed(feedId);
-              if (layoutStore.isMobile) {
-                layoutStore.closeDrawer();
-              }
+              layoutStore.closeDrawer();
             },
           ),
           articleList: ArticleList(

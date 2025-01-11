@@ -1,84 +1,98 @@
-import '../../models/article.dart';
-import '../../models/category.dart';
-import '../../models/feed.dart';
+import 'package:drift/drift.dart';
 
-final List<Category> mockCategories = [
-  Category(
-    id: 'tech',
-    name: '科技',
-    feeds: [
-      Feed(
-        id: 'sspai',
-        title: '少数派',
-        url: 'https://sspai.com/feed',
-        category: '科技',
-        unreadCount: 12,
-        lastUpdated: DateTime.now(),
-        articles: [
-          Article(
-            id: 'sspai_1',
-            feedId: 'sspai',
-            title: '如何打造一个高效的 RSS 工作流',
-            content: '在信息过载的时代，RSS 依然是最好的信息获取方式之一...',
-            author: '少数派编辑部',
-            publishDate: DateTime.now().subtract(const Duration(days: 1)),
-            url: 'https://sspai.com/post/12345',
-          ),
-          Article(
-            id: 'sspai_2',
-            feedId: 'sspai',
-            title: '新玩意 | 本周值得关注的 10 款新品',
-            content: '本周有哪些值得关注的新品发布？让我们一起来看看...',
-            author: '少数派编辑部',
-            publishDate: DateTime.now().subtract(const Duration(days: 2)),
-            url: 'https://sspai.com/post/12346',
-          ),
-        ],
+import '../database/database.dart';
+
+Future<List<FeedTableCompanion>> getMockFeedsData() async {
+  return [
+    FeedTableCompanion.insert(
+      id: '1',
+      title: 'Flutter News',
+      url: 'https://flutter.dev/feed',
+      iconUrl: const Value('https://flutter.dev/favicon.ico'),
+      category: 'Technology',
+      unreadCount: const Value(5),
+      lastUpdated: DateTime.now(),
+    ),
+    FeedTableCompanion.insert(
+      id: '2',
+      title: 'Dart News',
+      url: 'https://dart.dev/feed',
+      iconUrl: const Value('https://dart.dev/favicon.ico'),
+      category: 'Technology',
+      unreadCount: const Value(3),
+      lastUpdated: DateTime.now(),
+    ),
+  ];
+}
+
+Future<FeedTableCompanion?> getMockFeedData(String id) async {
+  final feeds = await getMockFeedsData();
+  return feeds.where((feed) => feed.id.value == id).firstOrNull;
+}
+
+Future<List<ArticleTableCompanion>> getMockArticlesData(String feedId) async {
+  final now = DateTime.now();
+  final cacheUntil = now.add(const Duration(days: 7));
+
+  if (feedId == '1') {
+    return [
+      ArticleTableCompanion.insert(
+        id: '1',
+        feedId: feedId,
+        title: 'Flutter 3.0 Released',
+        content: 'Flutter 3.0 brings exciting new features...',
+        summary: const Value('A summary of Flutter 3.0 release'),
+        author: const Value('Flutter Team'),
+        publishDate: now.subtract(const Duration(days: 1)),
+        isRead: const Value(false),
+        isStarred: const Value(false),
+        url: 'https://flutter.dev/blog/flutter-3.0',
+        cacheUntil: cacheUntil,
       ),
-      Feed(
-        id: 'ifanr',
-        title: '爱范儿',
-        url: 'https://www.ifanr.com/feed',
-        category: '科技',
-        unreadCount: 5,
-        lastUpdated: DateTime.now(),
-        articles: [
-          Article(
-            id: 'ifanr_1',
-            feedId: 'ifanr',
-            title: '苹果发布会前瞻：除了 iPhone 15，还有这些新品值得期待',
-            content: '一年一度的苹果秋季发布会即将到来...',
-            author: '爱范儿编辑部',
-            publishDate: DateTime.now().subtract(const Duration(days: 1)),
-            url: 'https://www.ifanr.com/12345',
-          ),
-        ],
+      ArticleTableCompanion.insert(
+        id: '2',
+        feedId: feedId,
+        title: 'What\'s New in Flutter',
+        content: 'Check out the latest updates in Flutter...',
+        summary: const Value('Overview of new Flutter features'),
+        author: const Value('Flutter Team'),
+        publishDate: now.subtract(const Duration(days: 2)),
+        isRead: const Value(false),
+        isStarred: const Value(false),
+        url: 'https://flutter.dev/blog/whats-new',
+        cacheUntil: cacheUntil,
       ),
-    ],
-  ),
-  Category(
-    id: 'news',
-    name: '新闻',
-    feeds: [
-      Feed(
-        id: 'readhub',
-        title: 'Readhub',
-        url: 'https://readhub.cn/rss',
-        category: '新闻',
-        unreadCount: 8,
-        lastUpdated: DateTime.now(),
-        articles: [
-          Article(
-            id: 'readhub_1',
-            feedId: 'readhub',
-            title: '今日热点：人工智能发展最新动态',
-            content: '人工智能领域今日发生了这些重要事件...',
-            author: 'Readhub',
-            publishDate: DateTime.now().subtract(const Duration(hours: 6)),
-            url: 'https://readhub.cn/topic/12345',
-          ),
-        ],
+    ];
+  } else if (feedId == '2') {
+    return [
+      ArticleTableCompanion.insert(
+        id: '3',
+        feedId: feedId,
+        title: 'Dart 3.0 Released',
+        content: 'Dart 3.0 introduces new language features...',
+        summary: const Value('A summary of Dart 3.0 release'),
+        author: const Value('Dart Team'),
+        publishDate: now.subtract(const Duration(days: 1)),
+        isRead: const Value(false),
+        isStarred: const Value(false),
+        url: 'https://dart.dev/blog/dart-3.0',
+        cacheUntil: cacheUntil,
       ),
-    ],
-  ),
-];
+      ArticleTableCompanion.insert(
+        id: '4',
+        feedId: feedId,
+        title: 'Dart Best Practices',
+        content: 'Learn about Dart best practices...',
+        summary: const Value('Overview of Dart best practices'),
+        author: const Value('Dart Team'),
+        publishDate: now.subtract(const Duration(days: 2)),
+        isRead: const Value(false),
+        isStarred: const Value(false),
+        url: 'https://dart.dev/blog/best-practices',
+        cacheUntil: cacheUntil,
+      ),
+    ];
+  }
+
+  return [];
+}

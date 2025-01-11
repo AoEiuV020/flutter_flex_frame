@@ -9,83 +9,34 @@ part of 'article_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticleStore on _ArticleStore, Store {
-  late final _$isReadAtom =
-      Atom(name: '_ArticleStore.isRead', context: context);
+  Computed<bool>? _$isReadComputed;
 
   @override
-  bool get isRead {
-    _$isReadAtom.reportRead();
-    return super.isRead;
+  bool get isRead => (_$isReadComputed ??=
+          Computed<bool>(() => super.isRead, name: '_ArticleStore.isRead'))
+      .value;
+  Computed<bool>? _$isStarredComputed;
+
+  @override
+  bool get isStarred =>
+      (_$isStarredComputed ??= Computed<bool>(() => super.isStarred,
+              name: '_ArticleStore.isStarred'))
+          .value;
+
+  late final _$toggleReadAsyncAction =
+      AsyncAction('_ArticleStore.toggleRead', context: context);
+
+  @override
+  Future<void> toggleRead() {
+    return _$toggleReadAsyncAction.run(() => super.toggleRead());
   }
 
-  @override
-  set isRead(bool value) {
-    _$isReadAtom.reportWrite(value, super.isRead, () {
-      super.isRead = value;
-    });
-  }
-
-  late final _$isStarredAtom =
-      Atom(name: '_ArticleStore.isStarred', context: context);
+  late final _$toggleStarredAsyncAction =
+      AsyncAction('_ArticleStore.toggleStarred', context: context);
 
   @override
-  bool get isStarred {
-    _$isStarredAtom.reportRead();
-    return super.isStarred;
-  }
-
-  @override
-  set isStarred(bool value) {
-    _$isStarredAtom.reportWrite(value, super.isStarred, () {
-      super.isStarred = value;
-    });
-  }
-
-  late final _$_ArticleStoreActionController =
-      ActionController(name: '_ArticleStore', context: context);
-
-  @override
-  void toggleRead() {
-    final _$actionInfo = _$_ArticleStoreActionController.startAction(
-        name: '_ArticleStore.toggleRead');
-    try {
-      return super.toggleRead();
-    } finally {
-      _$_ArticleStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void toggleStarred() {
-    final _$actionInfo = _$_ArticleStoreActionController.startAction(
-        name: '_ArticleStore.toggleStarred');
-    try {
-      return super.toggleStarred();
-    } finally {
-      _$_ArticleStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void markRead() {
-    final _$actionInfo = _$_ArticleStoreActionController.startAction(
-        name: '_ArticleStore.markRead');
-    try {
-      return super.markRead();
-    } finally {
-      _$_ArticleStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void markUnread() {
-    final _$actionInfo = _$_ArticleStoreActionController.startAction(
-        name: '_ArticleStore.markUnread');
-    try {
-      return super.markUnread();
-    } finally {
-      _$_ArticleStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> toggleStarred() {
+    return _$toggleStarredAsyncAction.run(() => super.toggleStarred());
   }
 
   @override

@@ -23,6 +23,18 @@ You are tasked with creating a responsive RSS reader application that demonstrat
   * Development guidelines
   * Project wiki pages
 
+- Code Modification Rules:
+  * Never remove existing functionality during refactoring
+  * Do not switch back and forth between known incorrect solutions
+  * Once a solution is identified as incorrect, do not revert to it
+  * If unable to resolve an issue:
+    - Stop making changes immediately
+    - Document the problem clearly
+    - Explain what solutions were attempted
+    - Describe why each attempt failed
+    - List any error messages or unexpected behaviors
+    - Suggest possible alternative approaches
+
 ## 1. Technology Stack & Conventions
 - Flutter (latest stable version)
 - State Management: MobX

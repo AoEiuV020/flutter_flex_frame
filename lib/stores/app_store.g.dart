@@ -9,32 +9,32 @@ part of 'app_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppStore on _AppStore, Store {
-  Computed<List<Feed>>? _$allFeedsComputed;
+  Computed<FeedTableData?>? _$selectedFeedComputed;
 
   @override
-  List<Feed> get allFeeds =>
-      (_$allFeedsComputed ??= Computed<List<Feed>>(() => super.allFeeds,
-              name: '_AppStore.allFeeds'))
-          .value;
-  Computed<List<Article>>? _$allArticlesComputed;
-
-  @override
-  List<Article> get allArticles => (_$allArticlesComputed ??=
-          Computed<List<Article>>(() => super.allArticles,
-              name: '_AppStore.allArticles'))
+  FeedTableData? get selectedFeed => (_$selectedFeedComputed ??=
+          Computed<FeedTableData?>(() => super.selectedFeed,
+              name: '_AppStore.selectedFeed'))
       .value;
-  Computed<List<Article>>? _$currentArticlesComputed;
+  Computed<ArticleTableData?>? _$selectedArticleComputed;
 
   @override
-  List<Article> get currentArticles => (_$currentArticlesComputed ??=
-          Computed<List<Article>>(() => super.currentArticles,
+  ArticleTableData? get selectedArticle => (_$selectedArticleComputed ??=
+          Computed<ArticleTableData?>(() => super.selectedArticle,
+              name: '_AppStore.selectedArticle'))
+      .value;
+  Computed<List<ArticleTableData>>? _$currentArticlesComputed;
+
+  @override
+  List<ArticleTableData> get currentArticles => (_$currentArticlesComputed ??=
+          Computed<List<ArticleTableData>>(() => super.currentArticles,
               name: '_AppStore.currentArticles'))
       .value;
-  Computed<List<Article>>? _$starredArticlesComputed;
+  Computed<List<ArticleTableData>>? _$starredArticlesComputed;
 
   @override
-  List<Article> get starredArticles => (_$starredArticlesComputed ??=
-          Computed<List<Article>>(() => super.starredArticles,
+  List<ArticleTableData> get starredArticles => (_$starredArticlesComputed ??=
+          Computed<List<ArticleTableData>>(() => super.starredArticles,
               name: '_AppStore.starredArticles'))
       .value;
   Computed<int>? _$totalUnreadCountComputed;
@@ -45,83 +45,113 @@ mixin _$AppStore on _AppStore, Store {
           name: '_AppStore.totalUnreadCount'))
       .value;
 
+  late final _$feedsAtom = Atom(name: '_AppStore.feeds', context: context);
+
+  @override
+  ObservableList<FeedTableData> get feeds {
+    _$feedsAtom.reportRead();
+    return super.feeds;
+  }
+
+  @override
+  set feeds(ObservableList<FeedTableData> value) {
+    _$feedsAtom.reportWrite(value, super.feeds, () {
+      super.feeds = value;
+    });
+  }
+
+  late final _$articlesAtom =
+      Atom(name: '_AppStore.articles', context: context);
+
+  @override
+  ObservableList<ArticleTableData> get articles {
+    _$articlesAtom.reportRead();
+    return super.articles;
+  }
+
+  @override
+  set articles(ObservableList<ArticleTableData> value) {
+    _$articlesAtom.reportWrite(value, super.articles, () {
+      super.articles = value;
+    });
+  }
+
+  late final _$selectedFeedIdAtom =
+      Atom(name: '_AppStore.selectedFeedId', context: context);
+
+  @override
+  String? get selectedFeedId {
+    _$selectedFeedIdAtom.reportRead();
+    return super.selectedFeedId;
+  }
+
+  @override
+  set selectedFeedId(String? value) {
+    _$selectedFeedIdAtom.reportWrite(value, super.selectedFeedId, () {
+      super.selectedFeedId = value;
+    });
+  }
+
+  late final _$selectedArticleIdAtom =
+      Atom(name: '_AppStore.selectedArticleId', context: context);
+
+  @override
+  String? get selectedArticleId {
+    _$selectedArticleIdAtom.reportRead();
+    return super.selectedArticleId;
+  }
+
+  @override
+  set selectedArticleId(String? value) {
+    _$selectedArticleIdAtom.reportWrite(value, super.selectedArticleId, () {
+      super.selectedArticleId = value;
+    });
+  }
+
   late final _$categoriesAtom =
       Atom(name: '_AppStore.categories', context: context);
 
   @override
-  ObservableList<Category> get categories {
+  ObservableList<String> get categories {
     _$categoriesAtom.reportRead();
     return super.categories;
   }
 
   @override
-  set categories(ObservableList<Category> value) {
+  set categories(ObservableList<String> value) {
     _$categoriesAtom.reportWrite(value, super.categories, () {
       super.categories = value;
     });
   }
 
-  late final _$selectedCategoryAtom =
-      Atom(name: '_AppStore.selectedCategory', context: context);
+  late final _$themeModeAtom =
+      Atom(name: '_AppStore.themeMode', context: context);
 
   @override
-  Category? get selectedCategory {
-    _$selectedCategoryAtom.reportRead();
-    return super.selectedCategory;
+  ThemeMode get themeMode {
+    _$themeModeAtom.reportRead();
+    return super.themeMode;
   }
 
   @override
-  set selectedCategory(Category? value) {
-    _$selectedCategoryAtom.reportWrite(value, super.selectedCategory, () {
-      super.selectedCategory = value;
+  set themeMode(ThemeMode value) {
+    _$themeModeAtom.reportWrite(value, super.themeMode, () {
+      super.themeMode = value;
     });
   }
 
-  late final _$selectedFeedAtom =
-      Atom(name: '_AppStore.selectedFeed', context: context);
+  late final _$localeAtom = Atom(name: '_AppStore.locale', context: context);
 
   @override
-  Feed? get selectedFeed {
-    _$selectedFeedAtom.reportRead();
-    return super.selectedFeed;
+  Locale get locale {
+    _$localeAtom.reportRead();
+    return super.locale;
   }
 
   @override
-  set selectedFeed(Feed? value) {
-    _$selectedFeedAtom.reportWrite(value, super.selectedFeed, () {
-      super.selectedFeed = value;
-    });
-  }
-
-  late final _$selectedArticleAtom =
-      Atom(name: '_AppStore.selectedArticle', context: context);
-
-  @override
-  Article? get selectedArticle {
-    _$selectedArticleAtom.reportRead();
-    return super.selectedArticle;
-  }
-
-  @override
-  set selectedArticle(Article? value) {
-    _$selectedArticleAtom.reportWrite(value, super.selectedArticle, () {
-      super.selectedArticle = value;
-    });
-  }
-
-  late final _$isDarkModeAtom =
-      Atom(name: '_AppStore.isDarkMode', context: context);
-
-  @override
-  bool get isDarkMode {
-    _$isDarkModeAtom.reportRead();
-    return super.isDarkMode;
-  }
-
-  @override
-  set isDarkMode(bool value) {
-    _$isDarkModeAtom.reportWrite(value, super.isDarkMode, () {
-      super.isDarkMode = value;
+  set locale(Locale value) {
+    _$localeAtom.reportWrite(value, super.locale, () {
+      super.locale = value;
     });
   }
 
@@ -141,48 +171,97 @@ mixin _$AppStore on _AppStore, Store {
     });
   }
 
+  late final _$loadFeedsAsyncAction =
+      AsyncAction('_AppStore.loadFeeds', context: context);
+
+  @override
+  Future<void> loadFeeds() {
+    return _$loadFeedsAsyncAction.run(() => super.loadFeeds());
+  }
+
+  late final _$loadArticlesAsyncAction =
+      AsyncAction('_AppStore.loadArticles', context: context);
+
+  @override
+  Future<void> loadArticles(String feedId) {
+    return _$loadArticlesAsyncAction.run(() => super.loadArticles(feedId));
+  }
+
+  late final _$toggleArticleStarredAsyncAction =
+      AsyncAction('_AppStore.toggleArticleStarred', context: context);
+
+  @override
+  Future<void> toggleArticleStarred(String articleId) {
+    return _$toggleArticleStarredAsyncAction
+        .run(() => super.toggleArticleStarred(articleId));
+  }
+
+  late final _$refreshAsyncAction =
+      AsyncAction('_AppStore.refresh', context: context);
+
+  @override
+  Future<void> refresh() {
+    return _$refreshAsyncAction.run(() => super.refresh());
+  }
+
+  late final _$_updateCategoriesAsyncAction =
+      AsyncAction('_AppStore._updateCategories', context: context);
+
+  @override
+  Future<void> _updateCategories() {
+    return _$_updateCategoriesAsyncAction.run(() => super._updateCategories());
+  }
+
+  late final _$cleanupCacheAsyncAction =
+      AsyncAction('_AppStore.cleanupCache', context: context);
+
+  @override
+  Future<void> cleanupCache() {
+    return _$cleanupCacheAsyncAction.run(() => super.cleanupCache());
+  }
+
   late final _$_AppStoreActionController =
       ActionController(name: '_AppStore', context: context);
 
   @override
-  void selectCategory(Category? category) {
-    final _$actionInfo = _$_AppStoreActionController.startAction(
-        name: '_AppStore.selectCategory');
-    try {
-      return super.selectCategory(category);
-    } finally {
-      _$_AppStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void selectFeed(Feed? feed) {
+  void selectFeed(String? feedId) {
     final _$actionInfo =
         _$_AppStoreActionController.startAction(name: '_AppStore.selectFeed');
     try {
-      return super.selectFeed(feed);
+      return super.selectFeed(feedId);
     } finally {
       _$_AppStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void selectArticle(Article? article) {
+  void selectArticle(String? articleId) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
         name: '_AppStore.selectArticle');
     try {
-      return super.selectArticle(article);
+      return super.selectArticle(articleId);
     } finally {
       _$_AppStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void toggleDarkMode() {
-    final _$actionInfo = _$_AppStoreActionController.startAction(
-        name: '_AppStore.toggleDarkMode');
+  void setThemeMode(ThemeMode mode) {
+    final _$actionInfo =
+        _$_AppStoreActionController.startAction(name: '_AppStore.setThemeMode');
     try {
-      return super.toggleDarkMode();
+      return super.setThemeMode(mode);
+    } finally {
+      _$_AppStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setLocale(Locale newLocale) {
+    final _$actionInfo =
+        _$_AppStoreActionController.startAction(name: '_AppStore.setLocale');
+    try {
+      return super.setLocale(newLocale);
     } finally {
       _$_AppStoreActionController.endAction(_$actionInfo);
     }
@@ -200,29 +279,7 @@ mixin _$AppStore on _AppStore, Store {
   }
 
   @override
-  void addCategory(Category category) {
-    final _$actionInfo =
-        _$_AppStoreActionController.startAction(name: '_AppStore.addCategory');
-    try {
-      return super.addCategory(category);
-    } finally {
-      _$_AppStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removeCategory(Category category) {
-    final _$actionInfo = _$_AppStoreActionController.startAction(
-        name: '_AppStore.removeCategory');
-    try {
-      return super.removeCategory(category);
-    } finally {
-      _$_AppStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setCategories(List<Category> newCategories) {
+  void setCategories(List<String> newCategories) {
     final _$actionInfo = _$_AppStoreActionController.startAction(
         name: '_AppStore.setCategories');
     try {
@@ -235,14 +292,16 @@ mixin _$AppStore on _AppStore, Store {
   @override
   String toString() {
     return '''
+feeds: ${feeds},
+articles: ${articles},
+selectedFeedId: ${selectedFeedId},
+selectedArticleId: ${selectedArticleId},
 categories: ${categories},
-selectedCategory: ${selectedCategory},
+themeMode: ${themeMode},
+locale: ${locale},
+fontSize: ${fontSize},
 selectedFeed: ${selectedFeed},
 selectedArticle: ${selectedArticle},
-isDarkMode: ${isDarkMode},
-fontSize: ${fontSize},
-allFeeds: ${allFeeds},
-allArticles: ${allArticles},
 currentArticles: ${currentArticles},
 starredArticles: ${starredArticles},
 totalUnreadCount: ${totalUnreadCount}

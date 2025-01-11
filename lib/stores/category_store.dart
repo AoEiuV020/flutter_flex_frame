@@ -1,42 +1,46 @@
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../models/category.dart';
-import '../models/feed.dart';
+import '../core/database/database.dart';
 
 part 'category_store.g.dart';
 
 class CategoryStore = _CategoryStore with _$CategoryStore;
 
 abstract class _CategoryStore with Store {
-  final Category category;
+  final AppDatabase _db;
+
+  _CategoryStore() : _db = GetIt.I<AppDatabase>();
 
   @observable
-  ObservableList<Feed> feeds = ObservableList<Feed>();
+  ObservableList<FeedTableData> feeds = ObservableList<FeedTableData>();
 
-  _CategoryStore(this.category) {
-    feeds.addAll(category.feeds);
-  }
+  @observable
+  bool isLoading = false;
 
   @computed
   int get totalUnread => feeds.fold(0, (sum, feed) => sum + feed.unreadCount);
 
   @action
-  void addFeed(Feed feed) {
-    feeds.add(feed);
-    category.feeds.add(feed);
+  Future<void> loadFeeds(String categoryId) async {
+    isLoading = true;
+    try {
+      final results = await _db.getFeedsByCategory(categoryId);
+      feeds = ObservableList.of(results);
+    } finally {
+      isLoading = false;
+    }
   }
 
   @action
-  void removeFeed(Feed feed) {
-    feeds.remove(feed);
-    category.feeds.remove(feed);
+  Future<void> addFeed(FeedTableCompanion feed) async {
+    await _db.insertFeed(feed);
+    await loadFeeds(feed.category.value);
   }
 
   @action
-  void setFeeds(List<Feed> newFeeds) {
-    feeds.clear();
-    feeds.addAll(newFeeds);
-    category.feeds.clear();
-    category.feeds.addAll(newFeeds);
+  Future<void> removeFeed(String id, String categoryId) async {
+    await _db.deleteFeed(id);
+    await loadFeeds(categoryId);
   }
 }

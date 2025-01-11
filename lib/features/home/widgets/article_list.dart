@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/database/database.dart';
 import '../../../core/di/dependencies.dart';
-import '../../../models/article.dart';
+import '../../../stores/app_store.dart';
+import '../../../stores/layout_store.dart';
 import 'article_list_content.dart';
 
 class ArticleList extends StatelessWidget {
   final String? selectedArticleId;
-  final Function(Article) onArticleSelected;
+  final Function(ArticleTableData) onArticleSelected;
+
+  AppStore get appStore => getIt<AppStore>();
+  LayoutStore get layoutStore => getIt<LayoutStore>();
 
   const ArticleList({
     super.key,
@@ -20,7 +25,10 @@ class ArticleList extends StatelessWidget {
     if (layoutStore.isDesktop) {
       return ArticleListContent(
         selectedArticleId: selectedArticleId,
-        onArticleSelected: onArticleSelected,
+        onArticleSelected: (id) {
+          final article = appStore.articles.firstWhere((a) => a.id == id);
+          onArticleSelected(article);
+        },
       );
     }
 
@@ -47,7 +55,10 @@ class ArticleList extends StatelessWidget {
         Expanded(
           child: ArticleListContent(
             selectedArticleId: selectedArticleId,
-            onArticleSelected: onArticleSelected,
+            onArticleSelected: (id) {
+              final article = appStore.articles.firstWhere((a) => a.id == id);
+              onArticleSelected(article);
+            },
           ),
         ),
       ],

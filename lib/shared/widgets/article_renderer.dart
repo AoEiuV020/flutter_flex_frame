@@ -4,14 +4,19 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/database/database.dart';
 import '../../core/di/dependencies.dart';
-import '../../models/article.dart';
+import '../../stores/app_store.dart';
 import '../../stores/article_store.dart';
+import '../../stores/layout_store.dart';
 
 class ArticleRenderer extends StatelessWidget {
-  final Article article;
+  final ArticleTableData article;
   final VoidCallback? onToggleRead;
   final VoidCallback? onToggleStarred;
+
+  AppStore get appStore => getIt<AppStore>();
+  LayoutStore get layoutStore => getIt<LayoutStore>();
 
   const ArticleRenderer({
     super.key,
@@ -22,7 +27,7 @@ class ArticleRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final articleStore = appStore.getArticleStore(article);
+    final articleStore = appStore.getArticleStore(article.id);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

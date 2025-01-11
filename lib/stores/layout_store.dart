@@ -7,27 +7,27 @@ class LayoutStore = _LayoutStore with _$LayoutStore;
 abstract class _LayoutStore with Store {
   static const double kMobileBreakpoint = 600;
   static const double kTabletBreakpoint = 1200;
-  static const double kFeedListWidth = 240;
-  static const double kArticleListWidth = 320;
-
-  @observable
-  double windowWidth = 0;
-
-  @observable
-  bool isFeedListExpanded = true;
+  static const double kFeedListWidth = 320;
+  static const double kArticleListWidth = 400;
 
   @observable
   bool isDrawerOpen = false;
 
+  @observable
+  double screenWidth = 0;
+
+  @observable
+  bool isFeedListExpanded = true;
+
   @computed
-  bool get isMobile => windowWidth < kMobileBreakpoint;
+  bool get isMobile => screenWidth < kMobileBreakpoint;
 
   @computed
   bool get isTablet =>
-      windowWidth >= kMobileBreakpoint && windowWidth < kTabletBreakpoint;
+      screenWidth >= kMobileBreakpoint && screenWidth < kTabletBreakpoint;
 
   @computed
-  bool get isDesktop => windowWidth >= kTabletBreakpoint;
+  bool get isDesktop => screenWidth >= kTabletBreakpoint;
 
   @computed
   double get feedListWidth => kFeedListWidth;
@@ -37,7 +37,7 @@ abstract class _LayoutStore with Store {
 
   @action
   void setWindowWidth(double width) {
-    windowWidth = width;
+    screenWidth = width;
     // 根据窗口宽度自动调整展开状态
     if (isDesktop) {
       isFeedListExpanded = true;
@@ -47,8 +47,13 @@ abstract class _LayoutStore with Store {
   }
 
   @action
-  void toggleFeedList() {
-    isFeedListExpanded = !isFeedListExpanded;
+  void openDrawer() {
+    isDrawerOpen = true;
+  }
+
+  @action
+  void closeDrawer() {
+    isDrawerOpen = false;
   }
 
   @action
@@ -57,7 +62,7 @@ abstract class _LayoutStore with Store {
   }
 
   @action
-  void closeDrawer() {
-    isDrawerOpen = false;
+  void toggleFeedList() {
+    isFeedListExpanded = !isFeedListExpanded;
   }
 }

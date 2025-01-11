@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/di/dependencies.dart';
-import '../../../models/article.dart';
+import '../../../stores/app_store.dart';
 
 class ArticleListContent extends StatelessWidget {
   final String? selectedArticleId;
-  final Function(Article) onArticleSelected;
+  final Function(String) onArticleSelected;
 
   const ArticleListContent({
     super.key,
@@ -17,21 +17,24 @@ class ArticleListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appStore = getIt<AppStore>();
+
     return Observer(
       builder: (context) {
-        final articles = appStore.currentArticles;
-
-        if (articles.isEmpty) {
+        if (appStore.articles.isEmpty) {
           return const Center(
-            child: Text('暂无数据'),
+            child: Text('暂无文章'),
           );
         }
 
         return ListView.builder(
-          itemCount: articles.length,
+          itemCount: appStore.articles.length,
           itemBuilder: (context, index) {
-            final article = articles[index];
+            final article = appStore.articles[index];
+            final isSelected = selectedArticleId == article.id;
+
             return ListTile(
+              selected: isSelected,
               title: Text(
                 article.title,
                 maxLines: 2,
@@ -67,8 +70,7 @@ class ArticleListContent extends StatelessWidget {
                     ),
                 ],
               ),
-              selected: article.id == selectedArticleId,
-              onTap: () => onArticleSelected(article),
+              onTap: () => onArticleSelected(article.id),
             );
           },
         );

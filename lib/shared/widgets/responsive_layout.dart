@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../core/di/dependencies.dart';
+import '../../stores/app_store.dart';
+import '../../stores/layout_store.dart';
 
 class ResponsiveLayout extends StatelessWidget {
-  final Widget? feedList;
-  final Widget? articleList;
-  final Widget? articleContent;
+  final Widget feedList;
+  final Widget articleList;
+  final Widget articleContent;
+
+  LayoutStore get layoutStore => getIt<LayoutStore>();
+  AppStore get appStore => getIt<AppStore>();
 
   const ResponsiveLayout({
     super.key,
-    this.feedList,
-    this.articleList,
-    this.articleContent,
+    required this.feedList,
+    required this.articleList,
+    required this.articleContent,
   });
 
   @override
@@ -39,14 +44,14 @@ class ResponsiveLayout extends StatelessWidget {
 
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-      drawer: feedList != null ? Drawer(child: feedList!) : null,
-      body: appStore.selectedArticle != null ? articleContent! : articleList!,
+      drawer: Drawer(child: feedList),
+      body: appStore.selectedArticle != null ? articleContent : articleList,
     );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
     return Scaffold(
-      drawer: feedList != null ? Drawer(child: feedList!) : null,
+      drawer: Drawer(child: feedList),
       body: Row(
         children: [
           Container(
@@ -70,7 +75,7 @@ class ResponsiveLayout extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: articleContent!,
+                child: articleContent,
               ),
             ),
           if (appStore.selectedArticle == null)
@@ -108,7 +113,7 @@ class ResponsiveLayout extends StatelessWidget {
           ),
           Expanded(
             child: appStore.selectedArticle != null
-                ? articleContent!
+                ? articleContent
                 : const Center(child: Text('请选择一篇文章')),
           ),
         ],

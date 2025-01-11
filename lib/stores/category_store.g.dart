@@ -20,58 +20,63 @@ mixin _$CategoryStore on _CategoryStore, Store {
   late final _$feedsAtom = Atom(name: '_CategoryStore.feeds', context: context);
 
   @override
-  ObservableList<Feed> get feeds {
+  ObservableList<FeedTableData> get feeds {
     _$feedsAtom.reportRead();
     return super.feeds;
   }
 
   @override
-  set feeds(ObservableList<Feed> value) {
+  set feeds(ObservableList<FeedTableData> value) {
     _$feedsAtom.reportWrite(value, super.feeds, () {
       super.feeds = value;
     });
   }
 
-  late final _$_CategoryStoreActionController =
-      ActionController(name: '_CategoryStore', context: context);
+  late final _$isLoadingAtom =
+      Atom(name: '_CategoryStore.isLoading', context: context);
 
   @override
-  void addFeed(Feed feed) {
-    final _$actionInfo = _$_CategoryStoreActionController.startAction(
-        name: '_CategoryStore.addFeed');
-    try {
-      return super.addFeed(feed);
-    } finally {
-      _$_CategoryStoreActionController.endAction(_$actionInfo);
-    }
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
   }
 
   @override
-  void removeFeed(Feed feed) {
-    final _$actionInfo = _$_CategoryStoreActionController.startAction(
-        name: '_CategoryStore.removeFeed');
-    try {
-      return super.removeFeed(feed);
-    } finally {
-      _$_CategoryStoreActionController.endAction(_$actionInfo);
-    }
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
   }
 
+  late final _$loadFeedsAsyncAction =
+      AsyncAction('_CategoryStore.loadFeeds', context: context);
+
   @override
-  void setFeeds(List<Feed> newFeeds) {
-    final _$actionInfo = _$_CategoryStoreActionController.startAction(
-        name: '_CategoryStore.setFeeds');
-    try {
-      return super.setFeeds(newFeeds);
-    } finally {
-      _$_CategoryStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> loadFeeds(String categoryId) {
+    return _$loadFeedsAsyncAction.run(() => super.loadFeeds(categoryId));
+  }
+
+  late final _$addFeedAsyncAction =
+      AsyncAction('_CategoryStore.addFeed', context: context);
+
+  @override
+  Future<void> addFeed(FeedTableCompanion feed) {
+    return _$addFeedAsyncAction.run(() => super.addFeed(feed));
+  }
+
+  late final _$removeFeedAsyncAction =
+      AsyncAction('_CategoryStore.removeFeed', context: context);
+
+  @override
+  Future<void> removeFeed(String id, String categoryId) {
+    return _$removeFeedAsyncAction.run(() => super.removeFeed(id, categoryId));
   }
 
   @override
   String toString() {
     return '''
 feeds: ${feeds},
+isLoading: ${isLoading},
 totalUnread: ${totalUnread}
     ''';
   }

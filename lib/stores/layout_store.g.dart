@@ -42,19 +42,35 @@ mixin _$LayoutStore on _LayoutStore, Store {
               name: '_LayoutStore.articleListWidth'))
       .value;
 
-  late final _$windowWidthAtom =
-      Atom(name: '_LayoutStore.windowWidth', context: context);
+  late final _$isDrawerOpenAtom =
+      Atom(name: '_LayoutStore.isDrawerOpen', context: context);
 
   @override
-  double get windowWidth {
-    _$windowWidthAtom.reportRead();
-    return super.windowWidth;
+  bool get isDrawerOpen {
+    _$isDrawerOpenAtom.reportRead();
+    return super.isDrawerOpen;
   }
 
   @override
-  set windowWidth(double value) {
-    _$windowWidthAtom.reportWrite(value, super.windowWidth, () {
-      super.windowWidth = value;
+  set isDrawerOpen(bool value) {
+    _$isDrawerOpenAtom.reportWrite(value, super.isDrawerOpen, () {
+      super.isDrawerOpen = value;
+    });
+  }
+
+  late final _$screenWidthAtom =
+      Atom(name: '_LayoutStore.screenWidth', context: context);
+
+  @override
+  double get screenWidth {
+    _$screenWidthAtom.reportRead();
+    return super.screenWidth;
+  }
+
+  @override
+  set screenWidth(double value) {
+    _$screenWidthAtom.reportWrite(value, super.screenWidth, () {
+      super.screenWidth = value;
     });
   }
 
@@ -74,22 +90,6 @@ mixin _$LayoutStore on _LayoutStore, Store {
     });
   }
 
-  late final _$isDrawerOpenAtom =
-      Atom(name: '_LayoutStore.isDrawerOpen', context: context);
-
-  @override
-  bool get isDrawerOpen {
-    _$isDrawerOpenAtom.reportRead();
-    return super.isDrawerOpen;
-  }
-
-  @override
-  set isDrawerOpen(bool value) {
-    _$isDrawerOpenAtom.reportWrite(value, super.isDrawerOpen, () {
-      super.isDrawerOpen = value;
-    });
-  }
-
   late final _$_LayoutStoreActionController =
       ActionController(name: '_LayoutStore', context: context);
 
@@ -105,22 +105,11 @@ mixin _$LayoutStore on _LayoutStore, Store {
   }
 
   @override
-  void toggleFeedList() {
+  void openDrawer() {
     final _$actionInfo = _$_LayoutStoreActionController.startAction(
-        name: '_LayoutStore.toggleFeedList');
+        name: '_LayoutStore.openDrawer');
     try {
-      return super.toggleFeedList();
-    } finally {
-      _$_LayoutStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void toggleDrawer() {
-    final _$actionInfo = _$_LayoutStoreActionController.startAction(
-        name: '_LayoutStore.toggleDrawer');
-    try {
-      return super.toggleDrawer();
+      return super.openDrawer();
     } finally {
       _$_LayoutStoreActionController.endAction(_$actionInfo);
     }
@@ -138,11 +127,33 @@ mixin _$LayoutStore on _LayoutStore, Store {
   }
 
   @override
+  void toggleDrawer() {
+    final _$actionInfo = _$_LayoutStoreActionController.startAction(
+        name: '_LayoutStore.toggleDrawer');
+    try {
+      return super.toggleDrawer();
+    } finally {
+      _$_LayoutStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void toggleFeedList() {
+    final _$actionInfo = _$_LayoutStoreActionController.startAction(
+        name: '_LayoutStore.toggleFeedList');
+    try {
+      return super.toggleFeedList();
+    } finally {
+      _$_LayoutStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-windowWidth: ${windowWidth},
-isFeedListExpanded: ${isFeedListExpanded},
 isDrawerOpen: ${isDrawerOpen},
+screenWidth: ${screenWidth},
+isFeedListExpanded: ${isFeedListExpanded},
 isMobile: ${isMobile},
 isTablet: ${isTablet},
 isDesktop: ${isDesktop},

@@ -1,72 +1,56 @@
 import 'package:mobx/mobx.dart';
 
-import '../models/article.dart';
-import '../models/feed.dart';
+import '../core/database/database.dart';
+import '../repositories/feed_repository.dart';
 
 part 'feed_store.g.dart';
 
 class FeedStore = _FeedStore with _$FeedStore;
 
 abstract class _FeedStore with Store {
-  final Feed feed;
+  final FeedRepository _repository;
+
+  _FeedStore(this._repository);
 
   @observable
-  int unreadCount = 0;
+  ObservableList<FeedTableData> feeds = ObservableList<FeedTableData>();
 
   @observable
-  DateTime lastUpdated;
-
-  @observable
-  ObservableList<Article> articles = ObservableList<Article>();
-
-  _FeedStore(this.feed) : lastUpdated = feed.lastUpdated {
-    unreadCount = feed.unreadCount;
-    articles.addAll(feed.articles);
-  }
+  bool isLoading = false;
 
   @action
-  void incrementUnread() {
-    unreadCount++;
-    feed.unreadCount = unreadCount;
-  }
-
-  @action
-  void decrementUnread() {
-    if (unreadCount > 0) {
-      unreadCount--;
-      feed.unreadCount = unreadCount;
+  Future<void> loadFeeds() async {
+    isLoading = true;
+    try {
+      final loadedFeeds = await _repository.getAllFeeds();
+      feeds.clear();
+      feeds.addAll(loadedFeeds);
+    } finally {
+      isLoading = false;
     }
   }
 
   @action
-  void setUnreadCount(int count) {
-    unreadCount = count;
-    feed.unreadCount = count;
+  Future<void> addFeed(FeedTableCompanion feed) async {
+    await _repository.insertFeed(feed);
+    await loadFeeds();
   }
 
   @action
-  void updateLastUpdated(DateTime time) {
-    lastUpdated = time;
-    feed.lastUpdated = time;
+  Future<void> updateFeed(FeedTableCompanion feed) async {
+    await _repository.updateFeed(feed);
+    await loadFeeds();
   }
 
   @action
-  void addArticle(Article article) {
-    articles.add(article);
-    feed.articles.add(article);
+  Future<void> deleteFeed(String id) async {
+    await _repository.deleteFeed(id);
+    await loadFeeds();
   }
 
   @action
-  void removeArticle(Article article) {
-    articles.remove(article);
-    feed.articles.remove(article);
-  }
-
-  @action
-  void setArticles(List<Article> newArticles) {
-    articles.clear();
-    articles.addAll(newArticles);
-    feed.articles.clear();
-    feed.articles.addAll(newArticles);
+  Future<void> updateUnreadCount(String feedId, int count) async {
+    await _repository.updateUnreadCount(feedId, count);
+    await loadFeeds();
   }
 }

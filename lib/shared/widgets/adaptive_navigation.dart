@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
-import '../../core/di/dependencies.dart';
+import '../../stores/layout_store.dart';
 
 class AdaptiveNavigation extends StatelessWidget {
   final Widget child;
@@ -17,6 +18,8 @@ class AdaptiveNavigation extends StatelessWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
   });
+
+  LayoutStore get layoutStore => GetIt.I<LayoutStore>();
 
   @override
   Widget build(BuildContext context) {

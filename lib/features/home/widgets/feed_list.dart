@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/dependencies.dart';
-import '../../../models/feed.dart';
+import '../../../stores/app_store.dart';
 import 'feed_list_content.dart';
 
 class FeedList extends StatelessWidget {
   final String? selectedFeedId;
-  final Function(Feed) onFeedSelected;
+  final Function(FeedTableData) onFeedSelected;
+
+  AppStore get appStore => getIt<AppStore>();
 
   const FeedList({
     super.key,
@@ -32,7 +34,10 @@ class FeedList extends StatelessWidget {
         Expanded(
           child: FeedListContent(
             selectedFeedId: selectedFeedId,
-            onFeedSelected: onFeedSelected,
+            onFeedSelected: (id) {
+              final feed = appStore.feeds.firstWhere((f) => f.id == id);
+              onFeedSelected(feed);
+            },
           ),
         ),
         Container(

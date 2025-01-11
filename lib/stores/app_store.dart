@@ -1,131 +1,172 @@
+import 'package:flutter/material.dart';
+
 import 'package:mobx/mobx.dart';
 
-import '../models/article.dart';
-import '../models/category.dart';
-import '../models/feed.dart';
+import '../core/database/database.dart';
+import '../core/di/dependencies.dart';
+import '../repositories/article_repository.dart';
+import '../repositories/feed_repository.dart';
 import 'article_store.dart';
-import 'category_store.dart';
-import 'feed_store.dart';
 
 part 'app_store.g.dart';
 
 class AppStore = _AppStore with _$AppStore;
 
 abstract class _AppStore with Store {
+  final _feedRepository = getIt<FeedRepository>();
+  final _articleRepository = getIt<ArticleRepository>();
   final Map<String, ArticleStore> _articleStores = {};
-  final Map<String, FeedStore> _feedStores = {};
-  final Map<String, CategoryStore> _categoryStores = {};
 
   @observable
-  ObservableList<Category> categories = ObservableList<Category>();
+  ObservableList<FeedTableData> feeds = ObservableList<FeedTableData>();
 
   @observable
-  Category? selectedCategory;
+  ObservableList<ArticleTableData> articles =
+      ObservableList<ArticleTableData>();
 
   @observable
-  Feed? selectedFeed;
+  String? selectedFeedId;
 
   @observable
-  Article? selectedArticle;
+  String? selectedArticleId;
 
   @observable
-  bool isDarkMode = false;
+  ObservableList<String> categories = ObservableList<String>();
+
+  @observable
+  ThemeMode themeMode = ThemeMode.system;
+
+  @observable
+  Locale locale = const Locale('zh', 'CN');
 
   @observable
   double fontSize = 16.0;
 
   @computed
-  List<Feed> get allFeeds => categories.expand((c) => c.feeds).toList();
+  FeedTableData? get selectedFeed => selectedFeedId == null
+      ? null
+      : feeds.cast<FeedTableData?>().firstWhere(
+            (feed) => feed?.id == selectedFeedId,
+            orElse: () => null,
+          );
 
   @computed
-  List<Article> get allArticles => allFeeds.expand((f) => f.articles).toList();
+  ArticleTableData? get selectedArticle => selectedArticleId == null
+      ? null
+      : articles.cast<ArticleTableData?>().firstWhere(
+            (article) => article?.id == selectedArticleId,
+            orElse: () => null,
+          );
 
   @computed
-  List<Article> get currentArticles => selectedFeed?.articles ?? allArticles;
+  List<ArticleTableData> get currentArticles => articles.toList();
 
   @computed
-  List<Article> get starredArticles =>
-      allArticles.where((a) => getArticleStore(a).isStarred).toList();
+  List<ArticleTableData> get starredArticles =>
+      articles.where((article) => article.isStarred).toList();
 
   @computed
-  int get totalUnreadCount => categories.fold(
-      0, (sum, category) => sum + getCategoryStore(category).totalUnread);
+  int get totalUnreadCount =>
+      feeds.fold(0, (sum, feed) => sum + feed.unreadCount);
 
-  ArticleStore getArticleStore(Article article) {
-    return _articleStores.putIfAbsent(
-      article.id,
-      () => ArticleStore(article),
-    );
-  }
-
-  FeedStore getFeedStore(Feed feed) {
-    return _feedStores.putIfAbsent(
-      feed.id,
-      () => FeedStore(feed),
-    );
-  }
-
-  CategoryStore getCategoryStore(Category category) {
-    return _categoryStores.putIfAbsent(
-      category.id,
-      () => CategoryStore(category),
-    );
+  ArticleStore getArticleStore(String articleId) {
+    if (!_articleStores.containsKey(articleId)) {
+      final article = articles.firstWhere((a) => a.id == articleId);
+      _articleStores[articleId] = ArticleStore(article, _articleRepository);
+    }
+    return _articleStores[articleId]!;
   }
 
   @action
-  void selectCategory(Category? category) => selectedCategory = category;
-
-  @action
-  void selectFeed(Feed? feed) => selectedFeed = feed;
-
-  @action
-  void selectArticle(Article? article) => selectedArticle = article;
-
-  @action
-  void toggleDarkMode() => isDarkMode = !isDarkMode;
-
-  @action
-  void setFontSize(double size) => fontSize = size;
-
-  @action
-  void addCategory(Category category) {
-    categories.add(category);
-    getCategoryStore(category); // 确保创建 store
+  Future<void> loadFeeds() async {
+    final loadedFeeds = await _feedRepository.getAllFeeds();
+    feeds.clear();
+    feeds.addAll(loadedFeeds);
+    await _updateCategories();
   }
 
   @action
-  void removeCategory(Category category) {
-    categories.remove(category);
-    _categoryStores.remove(category.id);
+  Future<void> loadArticles(String feedId) async {
+    final loadedArticles = await _articleRepository.getArticlesByFeed(feedId);
+    articles.clear();
+    articles.addAll(loadedArticles);
+  }
 
-    // 清理相关的 stores
-    for (var feed in category.feeds) {
-      _feedStores.remove(feed.id);
-      for (var article in feed.articles) {
-        _articleStores.remove(article.id);
-      }
+  @action
+  void selectFeed(String? feedId) {
+    selectedFeedId = feedId;
+    if (feedId != null) {
+      loadArticles(feedId);
+    } else {
+      articles.clear();
+    }
+    selectedArticleId = null;
+  }
+
+  @action
+  void selectArticle(String? articleId) {
+    selectedArticleId = articleId;
+    if (articleId != null) {
+      _articleRepository.markAsRead(articleId);
     }
   }
 
   @action
-  void setCategories(List<Category> newCategories) {
-    // 清理旧的 stores
-    _categoryStores.clear();
-    _feedStores.clear();
-    _articleStores.clear();
+  Future<void> toggleArticleStarred(String articleId) async {
+    await _articleRepository.toggleStarred(articleId);
+    if (selectedFeedId != null) {
+      await loadArticles(selectedFeedId!);
+    }
+  }
 
+  @action
+  Future<void> refresh() async {
+    await loadFeeds();
+    if (selectedFeedId != null) {
+      await loadArticles(selectedFeedId!);
+    }
+  }
+
+  @action
+  void setThemeMode(ThemeMode mode) {
+    themeMode = mode;
+  }
+
+  @action
+  void setLocale(Locale newLocale) {
+    locale = newLocale;
+  }
+
+  @action
+  void setFontSize(double size) {
+    fontSize = size;
+  }
+
+  @action
+  Future<void> _updateCategories() async {
+    final uniqueCategories =
+        feeds.map((feed) => feed.category).toSet().toList();
+    categories.clear();
+    categories.addAll(uniqueCategories);
+  }
+
+  @action
+  void setCategories(List<String> newCategories) {
     categories.clear();
     categories.addAll(newCategories);
+  }
 
-    // 初始化新的 stores
-    for (var category in newCategories) {
-      getCategoryStore(category);
-      for (var feed in category.feeds) {
-        getFeedStore(feed);
-        for (var article in feed.articles) {
-          getArticleStore(article);
-        }
-      }
+  List<FeedTableData> getFeedsByCategory(String category) {
+    return feeds.where((feed) => feed.category == category).toList();
+  }
+
+  @action
+  Future<void> cleanupCache() async {
+    // 默认缓存7天
+    const maxAge = Duration(days: 7);
+    await _articleRepository.cleanupCache(maxAge);
+    if (selectedFeedId != null) {
+      await loadArticles(selectedFeedId!);
     }
   }
 }

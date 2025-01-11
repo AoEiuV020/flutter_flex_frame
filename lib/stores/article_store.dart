@@ -1,46 +1,31 @@
 import 'package:mobx/mobx.dart';
 
-import '../models/article.dart';
+import '../core/database/database.dart';
+import '../repositories/article_repository.dart';
 
 part 'article_store.g.dart';
 
 class ArticleStore = _ArticleStore with _$ArticleStore;
 
 abstract class _ArticleStore with Store {
-  final Article article;
+  final ArticleTableData article;
+  final ArticleRepository _repository;
 
-  @observable
-  bool isRead = false;
+  _ArticleStore(this.article, this._repository);
 
-  @observable
-  bool isStarred = false;
+  @computed
+  bool get isRead => article.isRead;
 
-  _ArticleStore(this.article) {
-    isRead = article.isRead;
-    isStarred = article.isStarred;
+  @computed
+  bool get isStarred => article.isStarred;
+
+  @action
+  Future<void> toggleRead() async {
+    await _repository.markAsRead(article.id);
   }
 
   @action
-  void toggleRead() {
-    isRead = !isRead;
-    article.isRead = isRead;
-  }
-
-  @action
-  void toggleStarred() {
-    isStarred = !isStarred;
-    article.isStarred = isStarred;
-  }
-
-  @action
-  void markRead() {
-    isRead = true;
-    article.isRead = true;
-  }
-
-  @action
-  void markUnread() {
-    isRead = false;
-    article.isRead = false;
+  Future<void> toggleStarred() async {
+    await _repository.toggleStarred(article.id);
   }
 }

@@ -1,8 +1,22 @@
 targets:
   $default:
     builders:
-      mobx_codegen|mobx_generator:
+      drift_dev|drift_dev:
         enabled: true
+        options:
+          store_date_time_values_as_text: true
         generate_for:
           include:
-            - lib/stores/**.dart 
+            - lib/core/database/**.dart
+      mobx_codegen|mobx_generator:
+        enabled: true
+        options:
+        generate_for:
+          include:
+            - lib/stores/**.dart
+
+# 添加构建顺序配置          
+global_options:
+  drift_dev:
+    runs_before:
+      - mobx_codegen:mobx_generator

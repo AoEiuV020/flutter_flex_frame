@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/di/dependencies.dart';
-import '../../../models/feed.dart';
+import '../../../stores/app_store.dart';
+import '../../../stores/layout_store.dart';
 
 class FeedListContent extends StatelessWidget {
   final String? selectedFeedId;
-  final Function(Feed) onFeedSelected;
+  final Function(String) onFeedSelected;
 
   const FeedListContent({
     super.key,
@@ -17,6 +18,9 @@ class FeedListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appStore = getIt<AppStore>();
+    final layoutStore = getIt<LayoutStore>();
+
     return Observer(
       builder: (context) {
         return ListView(
@@ -32,49 +36,23 @@ class FeedListContent extends StatelessWidget {
               title: const Text('全部'),
               trailing: Text(appStore.totalUnreadCount.toString()),
               selected: selectedFeedId == null,
-              onTap: () {
-                appStore.selectFeed(null);
-                if (layoutStore.isMobile || layoutStore.isTablet) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.star),
-              title: const Text('收藏'),
-              trailing: Text(appStore.starredArticles.length.toString()),
-              selected: selectedFeedId == 'starred',
-              onTap: () {
-                // TODO: 处理收藏文章
-                if (layoutStore.isMobile || layoutStore.isTablet) {
-                  Navigator.of(context).pop();
-                }
-              },
+              onTap: () => onFeedSelected('all'),
             ),
             const Divider(),
             ...appStore.categories.map((category) {
+              final categoryFeeds = appStore.getFeedsByCategory(category);
               return ExpansionTile(
                 leading: const Icon(Icons.folder),
-                title: Text(category.name),
-                trailing: Text(category.totalUnread.toString()),
-                children: category.feeds.map((feed) {
-                  return ListTile(
-                    leading: feed.iconUrl != null
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage(feed.iconUrl!),
-                          )
-                        : const Icon(Icons.rss_feed),
-                    title: Text(feed.title),
-                    trailing: Text(feed.unreadCount.toString()),
-                    selected: feed.id == selectedFeedId,
-                    onTap: () {
-                      onFeedSelected(feed);
-                      if (layoutStore.isMobile || layoutStore.isTablet) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  );
-                }).toList(),
+                title: Text(category),
+                children: [
+                  ...categoryFeeds.map((feed) => ListTile(
+                        leading: const Icon(Icons.rss_feed),
+                        title: Text(feed.title),
+                        trailing: Text(feed.unreadCount.toString()),
+                        selected: feed.id == selectedFeedId,
+                        onTap: () => onFeedSelected(feed.id),
+                      )),
+                ],
               );
             }),
           ],

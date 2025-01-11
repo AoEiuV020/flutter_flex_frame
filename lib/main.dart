@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'core/di/dependencies.dart';
 import 'core/router/routes.dart';
-import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,14 +27,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'RSS Reader',
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      routerConfig: router,
+      title: 'RSS阅读器',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      routerConfig: router,
     );
   }
 }
